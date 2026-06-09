@@ -554,21 +554,52 @@
                 }
             }
 
-            const rawHeaders = rows[headerRowIndex].map(h => h.trim().toUpperCase());
+            // Normalization of text by removing accents/diacritics to avoid match crashes
+            function normalizeString(str) {
+                if (!str) return "";
+                return str.toString()
+                          .normalize("NFD")
+                          .replace(/[\u0300-\u036f]/g, "")
+                          .trim()
+                          .toUpperCase();
+            }
+
+            const rawHeaders = rows[headerRowIndex].map(h => normalizeString(h));
             
             const colIndex = {
                 source: rawHeaders.findIndex(h => h.includes("TORRE") || h.includes("SOURCE")),
                 unit: rawHeaders.findIndex(h => h.includes("UNIDAD") || h.includes("UNIT")),
-                typology: rawHeaders.findIndex(h => h.includes("RECAMARAS") || h.includes("TYPOLOGY") || h.includes("TIPO")),
+                typology: rawHeaders.findIndex(h => h.includes("RECAMARA") || h.includes("TYPOLOGY") || h.includes("TIPO")),
                 model: rawHeaders.findIndex(h => h.includes("MODELO") || h.includes("MODEL")),
                 m2: rawHeaders.findIndex(h => h.includes("M2") || h.includes("TOTAL")),
                 view: rawHeaders.findIndex(h => h.includes("VISTA") || h.includes("VIEW")),
-                orientation: rawHeaders.findIndex(h => h.includes("ORIENTACIÓN") || h.includes("ORIENTATION")),
+                orientation: rawHeaders.findIndex(h => h.includes("ORIENTACION") || h.includes("ORIENTATION")),
                 price: rawHeaders.findIndex(h => h.includes("PRECIO") || h.includes("PRICE")),
                 availability: rawHeaders.findIndex(h => h.includes("DISPONIBILIDAD") || h.includes("ESTATUS"))
             };
 
             let lastTorre = "Torre A";
+
+            function matchTorreName(t1, t2) {
+                const norm1 = t1.toString().toUpperCase();
+                const norm2 = t2.toString().toUpperCase();
+                const isA1 = norm1.includes("A") || norm1 === "A";
+                const isA2 = norm2.includes("A") || norm2 === "A";
+                const isB1 = norm1.includes("B") || norm1 === "B";
+                const isB2 = norm2.includes("B") || norm2 === "B";
+                return (isA1 && isA2) || (isB1 && isB2);
+            }
+
+            function matchUnitNumber(u1, u2) {
+                function clean(u) {
+                    let r = u.toString().toUpperCase().replace(/\s+/g, "").replace(/[-–]/g, "");
+                    if (r.startsWith("A") && r.length > 1 && !isNaN(r.charAt(1))) r = r.substring(1);
+                    if (r.startsWith("B") && r.length > 1 && !isNaN(r.charAt(1))) r = r.substring(1);
+                    r = r.replace("GHB", "GH").replace("GHA", "GH");
+                    return r;
+                }
+                return clean(u1) === clean(u2);
+            }
 
             for (let i = headerRowIndex + 1; i < rows.length; i++) {
                 const row = rows[i];
@@ -613,8 +644,8 @@
 
                 // Search inside master list to update dynamically
                 const matchedItem = inventoryData.find(item => 
-                    item.source === sourceVal && 
-                    item.unit.toUpperCase().replace(/\s+/g, '') === unitVal.toUpperCase().replace(/\s+/g, '')
+                    matchTorreName(item.source, sourceVal) && 
+                    matchUnitNumber(item.unit, unitVal)
                 );
 
                 if (matchedItem) {
@@ -704,7 +735,7 @@
 
         function getBedroomsCategory(typologyStr) {
             if (!typologyStr) return "2 Recámaras";
-            const normalized = typologyStr.toUpperCase();
+            const normalized = typologyStr.toString().toUpperCase();
             if (normalized.includes("PH") || normalized.includes("PENTHOUSE")) return "Penthouse";
             if (normalized.includes("1")) return "1 Recámara";
             if (normalized.includes("2")) return "2 Recámaras";
