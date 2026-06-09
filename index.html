@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-950">
+<html lang="es" class="h-full bg-slate-900">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAUTICA Residences - Luxury Catalog</title>
+    <title>NAUTICA Residences - Catálogo de Inventario</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- html2canvas for instant screenshots -->
+    <!-- html2canvas for instant premium snapshots -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <script>
@@ -30,9 +30,9 @@
                             700: '#9b7b54',
                         },
                         nautica: {
-                            50: '#f4f6f8',
-                            900: '#0b1320',
-                            950: '#030712', // Pure deep navy luxury background
+                            50: '#f4f7fa', // Light ice blue background from screenshot
+                            900: '#0b1c30', // Solid navy brand color from screenshot
+                            950: '#030f24', // Ultra deep marine accent
                         }
                     }
                 }
@@ -43,18 +43,13 @@
         .gold-gradient {
             background: linear-gradient(135deg, #c5a880 0%, #e1d4c3 50%, #b3936a 100%);
         }
-        .luxury-glass {
-            background: rgba(3, 7, 18, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        /* Custom premium scrollbars for a cleaner UI layout */
+        /* Custom premium scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #030712;
+            background: #030f24;
         }
         ::-webkit-scrollbar-thumb {
             background: #c5a880;
@@ -63,7 +58,7 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #b3936a;
         }
-        /* Style adjustments for native range sliders */
+        /* Range slider customized handle aesthetics */
         input[type="range"]::-webkit-slider-thumb {
             background: #c5a880;
             border: 2px solid #fff;
@@ -75,210 +70,158 @@
         }
     </style>
 </head>
-<body class="h-full font-sans text-slate-200 flex flex-col antialiased bg-nautica-950">
+<body class="h-full font-sans text-slate-800 flex flex-col antialiased bg-nautica-50">
 
-    <!-- Luxury Navigation Bar -->
-    <nav class="sticky top-0 z-40 w-full border-b border-gold-500/20 luxury-glass transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-24 items-center">
-                <div class="flex items-center space-x-4">
-                    <!-- Dynamic Brand Logo Integration with secure fallback -->
-                    <div class="flex items-center">
-                        <img id="brandLogo" src="NAUTT.png" alt="NAUTICA Residences" class="h-16 w-auto object-contain transition-opacity duration-300" onerror="handleLogoError()">
-                        <!-- Typography Fallback if the logo doesn't exist locally -->
-                        <div id="textLogoFallback" class="hidden flex flex-col">
-                            <span class="text-2xl font-serif font-bold tracking-[0.2em] text-white block">NAUTICA</span>
-                            <span class="text-[9px] tracking-[0.4em] font-light text-gold-500 uppercase block -mt-1">Residences by Nauma</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <!-- Soft luxury compass rotating spinner icon -->
-                    <div class="p-2.5 border border-gold-500/20 rounded-full bg-nautica-950">
-                        <i data-lucide="compass" class="w-5 h-5 text-gold-500"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Elegant Hero Banner Section -->
-    <header class="relative border-b border-gold-500/10 py-20 px-4 sm:px-6 lg:px-8 overflow-visible text-center bg-gradient-to-b from-[#060a13] to-[#030712]">
-        <!-- Delicate geometric background grid pattern -->
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#c5a880_1.5px,transparent_1px)] [background-size:24px_24px]"></div>
-        <div class="absolute -top-40 -left-40 w-[500px] h-[500px] bg-blue-500/5 rounded-full filter blur-3xl"></div>
-        <div class="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-gold-500/5 rounded-full filter blur-3xl"></div>
-
-        <div class="max-w-5xl mx-auto relative z-10 space-y-6">
-            <span class="text-xs font-bold tracking-[0.4em] text-gold-500 uppercase block">Portafolio Residencial de Lujo</span>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-serif font-light tracking-[0.15em] text-white leading-tight">
-                INVENTARIO EXCLUSIVO
-            </h1>
-            <div class="w-32 h-[1px] gold-gradient mx-auto my-6"></div>
-            <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
-                Explore y administre la disponibilidad de las <span class="text-white font-semibold">380 residencias</span> de Torre A y Torre B con orientación al Mar y la Laguna en tiempo real.
-            </p>
-
-            <!-- Quick Metrics Header Panels (Hidden detailed synchronization stats) -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8">
-                <div class="bg-[#0b1320]/40 border border-gold-500/10 rounded-2xl p-5 backdrop-blur-md">
-                    <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Unidades Totales</span>
-                    <span id="statTotal" class="text-3xl font-light font-serif text-white">380</span>
-                </div>
-                <div class="bg-[#0b1320]/40 border border-gold-500/10 rounded-2xl p-5 backdrop-blur-md">
-                    <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Disponibles (Blanco)</span>
-                    <span id="statAvailable" class="text-3xl font-light font-serif text-white font-semibold">0</span>
-                </div>
-                <div class="bg-[#0b1320]/40 border border-gold-500/10 rounded-2xl p-5 backdrop-blur-md">
-                    <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Reservadas (Amarillo)</span>
-                    <span id="statReserved" class="text-3xl font-light font-serif text-gold-500 font-semibold">0</span>
-                </div>
-                <div class="bg-[#0b1320]/40 border border-gold-500/10 rounded-2xl p-5 backdrop-blur-md">
-                    <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Vendidas (Rojo)</span>
-                    <span id="statSold" class="text-3xl font-light font-serif text-rose-500 font-semibold">0</span>
-                </div>
+    <!-- Brand Header Area (Solid Navy & Centered Typography matching the reference screenshot) -->
+    <header class="w-full bg-nautica-900 pt-8 pb-7 flex flex-col items-center justify-center relative">
+        <div class="flex flex-col items-center">
+            <!-- Dynamic Brand Logo Integration with secure fallback -->
+            <img id="brandLogo" src="NAUTT.png" alt="NAUTICA Residences" class="h-16 w-auto object-contain mb-2 transition-opacity duration-300" onerror="handleLogoError()">
+            <!-- Typography Fallback if the logo doesn't exist locally -->
+            <div id="textLogoFallback" class="hidden flex flex-col items-center">
+                <span class="text-2xl sm:text-3xl font-serif font-bold tracking-[0.25em] text-white block">NAUTICA RESIDENCES</span>
+                <span class="text-[10px] tracking-[0.4em] font-light text-gold-500 uppercase block mt-1">BY NAUMA</span>
             </div>
         </div>
     </header>
+    <!-- Solid Gold Separation Line from screenshot -->
+    <div class="w-full h-1 bg-gold-500 shadow-md"></div>
 
-    <!-- Main Dynamic Application Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-10">
-        
-        <!-- Premium Controls Panel -->
-        <section class="bg-[#0b1320]/30 border border-gold-500/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
-            <div class="flex items-center justify-between border-b border-gold-500/10 pb-4">
-                <div class="flex items-center space-x-3">
-                    <i data-lucide="sliders-horizontal" class="w-5 h-5 text-gold-500"></i>
-                    <h2 class="text-sm font-serif font-bold tracking-[0.2em] text-white uppercase">Parámetros de Navegación</h2>
-                </div>
-                <button onclick="resetFilters()" class="text-[10px] font-bold tracking-widest text-gold-500 hover:text-white uppercase transition-colors">
-                    Limpiar Filtros
-                </button>
-            </div>
-
-            <!-- Yacht Dashboard Filters Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Dropdown: Torre -->
-                <div class="flex flex-col gap-1.5">
-                    <label for="filterTorre" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Torre</label>
-                    <div class="relative">
-                        <select id="filterTorre" onchange="applyFilters()" class="w-full bg-nautica-950 border border-gold-500/20 text-slate-200 rounded-xl px-4 py-3.5 text-xs tracking-wider uppercase focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
-                            <option value="all">Todas las Torres</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gold-500">
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dropdown: Recámara -->
-                <div class="flex flex-col gap-1.5">
-                    <label for="filterRecamaras" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Recámaras</label>
-                    <div class="relative">
-                        <select id="filterRecamaras" onchange="applyFilters()" class="w-full bg-nautica-950 border border-gold-500/20 text-slate-200 rounded-xl px-4 py-3.5 text-xs tracking-wider uppercase focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
-                            <option value="all">Todas las Recámaras</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gold-500">
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dropdown: Vistas -->
-                <div class="flex flex-col gap-1.5">
-                    <label for="filterVistas" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vistas</label>
-                    <div class="relative">
-                        <select id="filterVistas" onchange="applyFilters()" class="w-full bg-nautica-950 border border-gold-500/20 text-slate-200 rounded-xl px-4 py-3.5 text-xs tracking-wider uppercase focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
-                            <option value="all">Todas las Vistas</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gold-500">
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Range Slider: Precio -->
-                <div class="flex flex-col gap-1.5">
-                    <div class="flex justify-between items-center">
-                        <label for="priceSlider" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Presupuesto Máximo</label>
-                        <span id="priceDisplayValue" class="text-xs font-bold text-gold-500 font-serif">$25,000,000</span>
-                    </div>
-                    <div class="relative pt-2">
-                        <input id="priceSlider" type="range" min="5000000" max="25000000" step="500000" value="25000000" oninput="handlePriceSliderChange(this.value)" class="w-full accent-gold-500 h-1.5 bg-nautica-950 rounded-lg appearance-none cursor-pointer">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Extended Filtering Options: Search and Sorter -->
-            <div class="flex flex-col md:flex-row items-center gap-4 border-t border-gold-500/10 pt-5">
-                <div class="w-full md:w-2/3 relative">
-                    <i data-lucide="search" class="w-4 h-4 text-gold-500 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                    <input id="searchBar" type="text" oninput="applyFilters()" placeholder="Buscar por número de unidad, modelo, tipología..." class="w-full bg-nautica-950/60 border border-gold-500/15 focus:border-gold-500 focus:bg-nautica-950 rounded-xl pl-11 pr-4 py-3.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all">
-                </div>
-                
-                <div class="w-full md:w-1/3 flex items-center justify-between border border-gold-500/15 bg-nautica-950/60 rounded-xl px-4 py-3.5">
-                    <div class="flex items-center space-x-2">
-                        <i data-lucide="arrow-up-down" class="w-4 h-4 text-gold-500"></i>
-                        <span class="text-xs text-slate-400">Ordenar por Precio</span>
-                    </div>
-                    <select id="sortOrder" onchange="applyFilters()" class="bg-transparent text-xs font-bold text-gold-500 focus:outline-none cursor-pointer">
-                        <option value="default">Relevancia</option>
-                        <option value="asc">Menor a Mayor</option>
-                        <option value="desc">Mayor a Menor</option>
+    <!-- White Premium Navigation Bar with Navigation Filters -->
+    <section class="bg-white border-b border-slate-200/80 w-full py-8 px-4 sm:px-6 lg:px-8 shadow-sm">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+            <!-- Dropdown: Torre -->
+            <div class="md:col-span-2 flex flex-col gap-1.5">
+                <label for="filterTorre" class="text-xs font-bold text-slate-800 tracking-wide">Torre</label>
+                <div class="relative">
+                    <select id="filterTorre" onchange="applyFilters()" class="w-full bg-white border border-slate-300 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
+                        <option value="all">Todas las Torres</option>
                     </select>
-                </div>
-            </div>
-        </section>
-
-        <!-- Catalog Gallery Grid -->
-        <section class="space-y-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i data-lucide="grid" class="w-5 h-5 text-gold-500"></i>
-                    <h3 class="text-lg font-serif font-light tracking-[0.1em] text-white uppercase">Residencias Disponibles</h3>
-                    <span id="filteredCount" class="bg-gold-500/10 text-gold-500 border border-gold-500/20 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">0 unidades</span>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
                 </div>
             </div>
 
-            <!-- Loader -->
-            <div id="loader" class="flex flex-col items-center justify-center py-24 gap-4">
-                <div class="w-10 h-10 border-2 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
-                <p class="text-xs tracking-[0.2em] uppercase text-gold-500/60 animate-pulse">Obteniendo coordenadas de inventario...</p>
-            </div>
-
-            <!-- Empty State -->
-            <div id="emptyState" class="hidden flex-col items-center justify-center py-20 px-4 text-center bg-nautica-900/40 border border-gold-500/10 rounded-3xl">
-                <div class="p-4 bg-nautica-950 rounded-full text-gold-500/30 border border-gold-500/10 mb-4">
-                    <i data-lucide="help-circle" class="w-10 h-10"></i>
+            <!-- Dropdown: Recámara -->
+            <div class="md:col-span-2 flex flex-col gap-1.5">
+                <label for="filterRecamaras" class="text-xs font-bold text-slate-800 tracking-wide">Recámaras</label>
+                <div class="relative">
+                    <select id="filterRecamaras" onchange="applyFilters()" class="w-full bg-white border border-slate-300 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
+                        <option value="all">Todas las Recámaras</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
                 </div>
-                <h4 class="text-lg font-serif tracking-wide text-white">Ninguna unidad coincide con los filtros establecidos</h4>
-                <p class="text-xs text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed">Pruebe ajustando los parámetros de Torre, recámaras o limpie el buscador.</p>
-                <button onclick="resetFilters()" class="mt-6 px-6 py-2.5 bg-gold-500 hover:bg-gold-600 text-nautica-950 text-xs font-bold tracking-widest uppercase rounded-full transition-all active:scale-95">
-                    Restaurar Búsqueda
-                </button>
             </div>
 
-            <!-- Interactive Grid Container (Renders all units automatically with optimized CSS) -->
-            <div id="unitGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Cards will render here dynamically -->
+            <!-- Dropdown: Vista -->
+            <div class="md:col-span-2 flex flex-col gap-1.5">
+                <label for="filterVistas" class="text-xs font-bold text-slate-800 tracking-wide">Vista</label>
+                <div class="relative">
+                    <select id="filterVistas" onchange="applyFilters()" class="w-full bg-white border border-slate-300 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
+                        <option value="all">Todas las Vistas</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
+                </div>
             </div>
-        </section>
+
+            <!-- Price Slider: Presupuesto Máximo -->
+            <div class="md:col-span-3 flex flex-col gap-1.5">
+                <div class="flex justify-between items-center text-xs font-bold">
+                    <span class="text-slate-800">Precio Máx:</span>
+                    <span id="priceDisplayValue" class="text-gold-500 font-bold">$25,000,000</span>
+                </div>
+                <div class="relative pt-2">
+                    <input id="priceSlider" type="range" min="5000000" max="25000000" step="100000" value="25000000" oninput="handlePriceSliderChange(this.value)" class="w-full accent-gold-500 h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+
+            <!-- Sort Toggle Buttons (Menor / Mayor from reference screenshot) -->
+            <div class="md:col-span-3 flex flex-col gap-1.5">
+                <span class="text-xs font-bold text-slate-800 tracking-wide">Ordenar Por Precio</span>
+                <div class="flex w-full border border-slate-300 rounded-xl overflow-hidden p-1 bg-slate-50">
+                    <button id="sortAsc" onclick="toggleSort('asc')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-slate-700 bg-white">
+                        Menor
+                    </button>
+                    <button id="sortDesc" onclick="toggleSort('desc')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-white bg-nautica-900">
+                        Mayor
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tablero de Disponibilidad Nautica Section -->
+    <section class="w-full bg-nautica-50 pt-10 pb-6 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col items-center gap-6">
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 text-center tracking-wide">Tablero de Disponibilidad Nautica</h2>
+            
+            <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4 w-full">
+                <!-- Pill 1: Ventas Torre A -->
+                <div class="bg-white border border-slate-200 shadow-sm px-6 py-3 rounded-full flex items-center justify-center space-x-2 text-xs font-semibold text-slate-700">
+                    <span>Ventas Torre A:</span>
+                    <span id="pillsVentasA" class="font-extrabold text-nautica-900">...</span>
+                </div>
+                <!-- Pill 2: Ventas Torre B -->
+                <div class="bg-white border border-slate-200 shadow-sm px-6 py-3 rounded-full flex items-center justify-center space-x-2 text-xs font-semibold text-slate-700">
+                    <span>Ventas Torre B:</span>
+                    <span id="pillsVentasB" class="font-extrabold text-nautica-900">...</span>
+                </div>
+                <!-- Pill 3: Disponibles de 380 -->
+                <div class="bg-white border border-gold-500 shadow-sm px-6 py-3 rounded-full flex items-center justify-center space-x-2 text-xs font-bold text-slate-800">
+                    <span>Disponibles:</span>
+                    <span id="pillsDispo" class="font-extrabold text-gold-600">...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Inventory Grid Display -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-8">
+        <!-- Search bar layout addition -->
+        <div class="w-full relative bg-white rounded-2xl border border-slate-200 p-2 shadow-sm flex items-center">
+            <i data-lucide="search" class="w-5 h-5 text-gold-500 absolute left-5"></i>
+            <input id="searchBar" type="text" oninput="applyFilters()" placeholder="Buscar por número de unidad, modelo, vista, orientación..." class="w-full bg-slate-50 focus:bg-white rounded-xl pl-12 pr-4 py-3.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none transition-all">
+        </div>
+
+        <!-- Loader -->
+        <div id="loader" class="flex flex-col items-center justify-center py-20 gap-4">
+            <div class="w-10 h-10 border-2 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-xs tracking-[0.2em] uppercase text-gold-500/80 animate-pulse">Obteniendo coordenadas de inventario...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden flex-col items-center justify-center py-20 px-4 text-center bg-white border border-slate-200 rounded-3xl">
+            <div class="p-4 bg-nautica-50 rounded-full text-gold-500/40 border border-gold-500/10 mb-4">
+                <i data-lucide="help-circle" class="w-10 h-10"></i>
+            </div>
+            <h4 class="text-lg font-serif tracking-wide text-slate-900">Ninguna unidad coincide con los filtros</h4>
+            <p class="text-xs text-slate-500 mt-2 max-w-sm mx-auto leading-relaxed">Pruebe ajustando los parámetros de Torre o limpie el buscador.</p>
+        </div>
+
+        <!-- Catalog Grid -->
+        <div id="unitGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Cards are rendered dynamically -->
+        </div>
     </main>
 
-    <!-- Interactive Unit Details Modal -->
+    <!-- Interactive Ficha Técnica Modal -->
     <div id="unitModal" class="fixed inset-0 z-50 overflow-y-auto hidden" role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-nautica-950/90 backdrop-blur-md transition-opacity" onclick="closeModal()"></div>
+            <div class="fixed inset-0 bg-nautica-900/90 backdrop-blur-md transition-opacity" onclick="closeModal()"></div>
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
 
             <!-- Modal Content Block -->
-            <div class="inline-block align-bottom bg-nautica-950 border border-gold-500/30 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+            <div class="inline-block align-bottom bg-white border border-gold-500/20 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
                 
-                <!-- Capture Area wrapper -->
-                <div id="captureArea" class="bg-nautica-950 p-1">
+                <!-- Capture Area wrapper (What is downloaded on snapshot button click) -->
+                <div id="captureArea" class="bg-white p-2">
                     <!-- Luxury Image Header -->
-                    <div id="modalHeaderBg" class="h-48 bg-gradient-to-r from-nautica-900 to-nautica-950 p-6 flex flex-col justify-end relative border-b border-gold-500/15">
+                    <div id="modalHeaderBg" class="h-48 bg-gradient-to-r from-nautica-900 to-nautica-950 p-6 flex flex-col justify-end relative border-b border-gold-500/15 text-white">
                         <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#c5a880_1px,transparent_1px)] [background-size:16px_16px]"></div>
                         
                         <!-- Badges -->
@@ -292,57 +235,57 @@
                     <!-- Specs -->
                     <div class="p-6 sm:p-8 space-y-6">
                         <div class="grid grid-cols-3 gap-4">
-                            <div class="p-3 bg-nautica-900/60 border border-gold-500/10 rounded-2xl text-center">
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl text-center">
                                 <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-0.5">Recámaras</span>
-                                <span id="modalRecamaras" class="text-sm font-bold text-white">3 R</span>
+                                <span id="modalRecamaras" class="text-sm font-bold text-slate-800">3 R</span>
                             </div>
-                            <div class="p-3 bg-nautica-900/60 border border-gold-500/10 rounded-2xl text-center">
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl text-center">
                                 <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-0.5">Metros²</span>
-                                <span id="modalM2" class="text-sm font-bold text-white">145 m²</span>
+                                <span id="modalM2" class="text-sm font-bold text-slate-800">145 m²</span>
                             </div>
-                            <div class="p-3 bg-nautica-900/60 border border-gold-500/10 rounded-2xl text-center">
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl text-center">
                                 <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-0.5">Tipología</span>
-                                <span id="modalTipo" class="text-sm font-bold text-white">3 R</span>
+                                <span id="modalTipo" class="text-sm font-bold text-slate-800">3 R</span>
                             </div>
                         </div>
 
                         <!-- Additional Details -->
-                        <div class="border-t border-b border-gold-500/10 py-4 space-y-3">
+                        <div class="border-t border-b border-slate-100 py-4 space-y-3 text-slate-800">
                             <div class="flex justify-between text-xs">
                                 <span class="text-slate-400 uppercase tracking-widest">Modelo</span>
-                                <span id="modalModelo" class="font-bold text-white tracking-widest">L2</span>
+                                <span id="modalModelo" class="font-bold text-slate-800 tracking-widest">L2</span>
                             </div>
                             <div class="flex justify-between text-xs">
                                 <span class="text-slate-400 uppercase tracking-widest">Vista de la Unidad</span>
-                                <span id="modalVista" class="font-bold text-white">Interior</span>
+                                <span id="modalVista" class="font-bold text-slate-800">Interior</span>
                             </div>
                             <div class="flex justify-between text-xs">
                                 <span class="text-slate-400 uppercase tracking-widest">Orientación</span>
-                                <span id="modalOrientacion" class="font-bold text-white">Sur</span>
+                                <span id="modalOrientacion" class="font-bold text-slate-800">Sur</span>
                             </div>
-                            <div class="flex justify-between items-center pt-3 border-t border-gold-500/10">
-                                <span class="text-xs text-gold-500 uppercase tracking-widest font-semibold">Precio de Lista</span>
-                                <span id="modalPrecio" class="text-2xl font-serif text-white tracking-wide">$11,390,000 MXN</span>
+                            <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+                                <span class="text-xs text-gold-500 uppercase tracking-widest font-bold">Precio de Lista</span>
+                                <span id="modalPrecio" class="text-2xl font-serif text-nautica-900 tracking-wide">$11,390,000 MXN</span>
                             </div>
                         </div>
 
                         <!-- Architectural Blueprint layout -->
                         <div>
                             <span class="text-[10px] font-bold text-slate-400 block mb-2 uppercase tracking-wider">Planos de Distribución</span>
-                            <div id="modalLayoutRender" class="border border-gold-500/15 rounded-2xl bg-nautica-900/40 p-4 flex items-center justify-center min-h-[160px]">
+                            <div id="modalLayoutRender" class="border border-slate-200 rounded-2xl bg-slate-50 p-4 flex items-center justify-center min-h-[160px]">
                                 <!-- SVG Blueprint rendered here -->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Actions (Not wrapped in captureArea so buttons are excluded from the snapshot image) -->
+                <!-- Actions -->
                 <div class="p-6 sm:p-8 pt-0 flex flex-col sm:flex-row gap-3">
-                    <button id="captureBtn" onclick="takeSnapshot()" class="flex-grow flex items-center justify-center space-x-2 bg-gold-500 hover:bg-gold-600 text-nautica-950 px-5 py-4 rounded-xl font-bold transition-all shadow-md active:scale-95 cursor-pointer">
+                    <button id="captureBtn" onclick="takeSnapshot()" class="flex-grow flex items-center justify-center space-x-2 bg-gold-500 hover:bg-gold-600 text-white px-5 py-4 rounded-xl font-bold transition-all shadow-md active:scale-95 cursor-pointer">
                         <i id="captureBtnIcon" data-lucide="download" class="w-5 h-5"></i>
                         <span id="captureBtnText" class="text-xs uppercase tracking-widest">Descargar Ficha Técnica</span>
                     </button>
-                    <button onclick="closeModal()" class="px-5 py-4 border border-gold-500/30 hover:bg-gold-500/10 text-gold-500 rounded-xl font-bold transition-all text-xs uppercase tracking-widest active:scale-95">
+                    <button onclick="closeModal()" class="px-5 py-4 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-all text-xs uppercase tracking-widest active:scale-95">
                         Cerrar
                     </button>
                 </div>
@@ -350,8 +293,8 @@
         </div>
     </div>
 
-    <!-- Footer Details -->
-    <footer class="bg-slate-950 border-t border-gold-500/10 text-slate-400 py-12 px-4 sm:px-6 lg:px-8 mt-auto">
+    <!-- Minimal Elegant Footer -->
+    <footer class="bg-nautica-900 border-t border-gold-500/10 text-slate-400 py-10 px-4 sm:px-6 lg:px-8 mt-auto">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm">
             <div class="flex items-center space-x-3">
                 <div class="p-2 border border-gold-500/20 rounded-lg">
@@ -373,9 +316,10 @@
     <script>
         let inventoryData = [];
         let filteredItems = [];
-        let tsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTafqCNoOZsFQESQJez6BkoOanJtx4XiK_jd794XU2zBUtjn7wKPJJW4Yo28zVcd--6FaXbenDbiuyZ/pub?output=tsv";
+        let sortOrder = 'desc'; // Default matched to reference image (Mayor)
+        const tsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTafqCNoOZsFQESQJez6BkoOanJtx4XiK_jd794XU2zBUtjn7wKPJJW4Yo28zVcd--6FaXbenDbiuyZ/pub?output=tsv";
         
-        // Brand logo dynamic safety triggers
+        // Brand logo image fallback triggered if NAUTT.png is absent
         function handleLogoError() {
             document.getElementById("brandLogo").style.display = "none";
             document.getElementById("textLogoFallback").classList.remove("hidden");
@@ -467,6 +411,7 @@
             return data;
         }
 
+        // Execute dynamic sync or fallback sequence immediately
         window.onload = function() {
             fetchInventoryData();
         }
@@ -478,20 +423,20 @@
 
             fetch(tsvUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error("Accediendo a base de datos interna...");
+                    if (!response.ok) throw new Error("CORS / Network block");
                     return response.text();
                 })
                 .then(text => {
-                    parseTsvData(text);
-                    document.getElementById("syncStatus").classList.remove("hidden");
+                    try {
+                        parseTsvData(text);
+                    } catch (parseError) {
+                        console.error("Parser issue:", parseError);
+                        useLocalFallback();
+                    }
                 })
                 .catch(error => {
-                    console.warn(error.message);
+                    console.warn("Direct Google Sheet fetch blocked/failed. Loading complete fallback catalog.", error);
                     useLocalFallback();
-                    document.getElementById("syncStatus").classList.add("hidden");
-                })
-                .finally(() => {
-                    lucide.createIcons();
                 });
         }
 
@@ -500,99 +445,95 @@
             processInventoryAndBuildFilters();
         }
 
+        // Parsers for Google Sheet TSV (Carry-Forward of Torre column values to overcome merged cell exports)
         function parseTsvData(tsvText) {
-            try {
-                const rows = tsvText.split("\n").map(r => r.split("\t"));
-                if (rows.length < 2) {
-                    useLocalFallback();
-                    return;
+            const rows = tsvText.split(/\r?\n/).map(r => r.split("\t"));
+            if (rows.length < 2) {
+                useLocalFallback();
+                return;
+            }
+
+            // High robust header matching scan
+            let headerRowIndex = 0;
+            for (let i = 0; i < Math.min(rows.length, 10); i++) {
+                const hasUnit = rows[i].some(cell => {
+                    const val = cell.trim().toUpperCase();
+                    return val.includes("UNIDAD") || val.includes("UNIT") || val.includes("DEPTO");
+                });
+                if (hasUnit) {
+                    headerRowIndex = i;
+                    break;
                 }
+            }
 
-                // High robust header matching
-                let headerRowIndex = 0;
-                for (let i = 0; i < Math.min(rows.length, 10); i++) {
-                    const hasUnit = rows[i].some(cell => {
-                        const val = cell.trim().toUpperCase();
-                        return val.includes("UNIDAD") || val.includes("UNIT") || val.includes("DEPTO");
-                    });
-                    if (hasUnit) {
-                        headerRowIndex = i;
-                        break;
-                    }
-                }
+            const rawHeaders = rows[headerRowIndex].map(h => h.trim().toUpperCase());
+            
+            const colIndex = {
+                source: rawHeaders.findIndex(h => h.includes("TORRE") || h.includes("SOURCE")),
+                unit: rawHeaders.findIndex(h => h.includes("UNIDAD") || h.includes("UNIT")),
+                typology: rawHeaders.findIndex(h => h.includes("RECAMARAS") || h.includes("TYPOLOGY") || h.includes("TIPO")),
+                model: rawHeaders.findIndex(h => h.includes("MODELO") || h.includes("MODEL")),
+                m2: rawHeaders.findIndex(h => h.includes("M2") || h.includes("TOTAL")),
+                view: rawHeaders.findIndex(h => h.includes("VISTA") || h.includes("VIEW")),
+                orientation: rawHeaders.findIndex(h => h.includes("ORIENTACIÓN") || h.includes("ORIENTATION")),
+                price: rawHeaders.findIndex(h => h.includes("PRECIO") || h.includes("PRICE")),
+                availability: rawHeaders.findIndex(h => h.includes("DISPONIBILIDAD") || h.includes("ESTATUS"))
+            };
 
-                const rawHeaders = rows[headerRowIndex].map(h => h.trim().toUpperCase());
-                
-                const colIndex = {
-                    source: rawHeaders.findIndex(h => h.includes("TORRE") || h.includes("SOURCE")),
-                    unit: rawHeaders.findIndex(h => h.includes("UNIDAD") || h.includes("UNIT")),
-                    typology: rawHeaders.findIndex(h => h.includes("RECAMARAS") || h.includes("TYPOLOGY") || h.includes("TIPO")),
-                    model: rawHeaders.findIndex(h => h.includes("MODELO") || h.includes("MODEL")),
-                    m2: rawHeaders.findIndex(h => h.includes("M2") || h.includes("TOTAL")),
-                    view: rawHeaders.findIndex(h => h.includes("VISTA") || h.includes("VIEW")),
-                    orientation: rawHeaders.findIndex(h => h.includes("ORIENTACIÓN") || h.includes("ORIENTATION")),
-                    price: rawHeaders.findIndex(h => h.includes("PRECIO") || h.includes("PRICE")),
-                    availability: rawHeaders.findIndex(h => h.includes("DISPONIBILIDAD") || h.includes("ESTATUS"))
-                };
+            const parsedData = [];
+            let lastTorre = "Torre A";
 
-                const parsedData = [];
-                let lastTorre = "Torre A";
+            for (let i = headerRowIndex + 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (row.length < 2) continue;
 
-                for (let i = headerRowIndex + 1; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (row.length < 2) continue;
-
-                    let sourceVal = colIndex.source !== -1 ? row[colIndex.source]?.trim() : "";
-                    if (sourceVal) {
-                        lastTorre = sourceVal;
-                    } else {
-                        sourceVal = lastTorre;
-                    }
-
-                    const unitVal = colIndex.unit !== -1 ? row[colIndex.unit]?.trim() : "";
-                    if (!unitVal) continue; // Skip lines with empty units
-
-                    const typologyVal = colIndex.typology !== -1 ? row[colIndex.typology]?.trim() : "2 R";
-                    const modelVal = colIndex.model !== -1 ? row[colIndex.model]?.trim() : "Específico";
-                    const m2Val = colIndex.m2 !== -1 ? parseFloat(row[colIndex.m2]?.replace(/[^\d.]/g, '')) : 100;
-                    const viewVal = colIndex.view !== -1 ? row[colIndex.view]?.trim() : "Exterior";
-                    const orientationVal = colIndex.orientation !== -1 ? row[colIndex.orientation]?.trim() : "Norte";
-                    const priceVal = colIndex.price !== -1 ? row[colIndex.price]?.trim() : "";
-                    
-                    // Maps: Blanco (SI) | Amarillo (RESERVADO) | Rojo (VENDIDO)
-                    let availabilityVal = "SI";
-                    if (colIndex.availability !== -1) {
-                        const val = row[colIndex.availability]?.trim().toUpperCase();
-                        if (val.includes("RESERV") || val === "AMARILLO" || val === "NO DISPONIBLE") {
-                            availabilityVal = "RESERVADO";
-                        } else if (val.includes("VEND") || val === "ROJO" || val === "NO" || val === "VENDIDA") {
-                            availabilityVal = "VENDIDO";
-                        }
-                    } else {
-                        availabilityVal = priceVal ? "SI" : "VENDIDO";
-                    }
-
-                    parsedData.push({
-                        source: sourceVal,
-                        unit: unitVal,
-                        typology: typologyVal,
-                        model: modelVal,
-                        m2: isNaN(m2Val) ? 0 : m2Val,
-                        view: viewVal || "Exterior",
-                        orientation: orientationVal || "Norte",
-                        price: priceVal,
-                        availability: availabilityVal
-                    });
-                }
-
-                if (parsedData.length > 0) {
-                    inventoryData = parsedData;
-                    processInventoryAndBuildFilters();
+                let sourceVal = colIndex.source !== -1 ? row[colIndex.source]?.trim() : "";
+                if (sourceVal) {
+                    lastTorre = sourceVal;
                 } else {
-                    useLocalFallback();
+                    sourceVal = lastTorre;
                 }
-            } catch (err) {
-                console.warn("TSV Parsing crashed. Using luxury fallback catalog.", err);
+
+                const unitVal = colIndex.unit !== -1 ? row[colIndex.unit]?.trim() : "";
+                if (!unitVal) continue; 
+
+                const typologyVal = colIndex.typology !== -1 ? row[colIndex.typology]?.trim() : "2 R";
+                const modelVal = colIndex.model !== -1 ? row[colIndex.model]?.trim() : "Específico";
+                const m2Val = colIndex.m2 !== -1 ? parseFloat(row[colIndex.m2]?.replace(/[^\d.]/g, '')) : 100;
+                const viewVal = colIndex.view !== -1 ? row[colIndex.view]?.trim() : "Exterior";
+                const orientationVal = colIndex.orientation !== -1 ? row[colIndex.orientation]?.trim() : "Norte";
+                const priceVal = colIndex.price !== -1 ? row[colIndex.price]?.trim() : "";
+                
+                // Color maps: Blanco = Disponible (SI) | Amarillo = Reservado | Rojo = Vendido (NO)
+                let availabilityVal = "SI";
+                if (colIndex.availability !== -1) {
+                    const val = row[colIndex.availability]?.trim().toUpperCase();
+                    if (val.includes("RESERV") || val === "AMARILLO" || val === "NO DISPONIBLE") {
+                        availabilityVal = "RESERVADO";
+                    } else if (val.includes("VEND") || val === "ROJO" || val === "NO" || val === "VENDIDA") {
+                        availabilityVal = "VENDIDO";
+                    }
+                } else {
+                    availabilityVal = priceVal ? "SI" : "VENDIDO";
+                }
+
+                parsedData.push({
+                    source: sourceVal,
+                    unit: unitVal,
+                    typology: typologyVal,
+                    model: modelVal,
+                    m2: isNaN(m2Val) ? 0 : m2Val,
+                    view: viewVal || "Exterior",
+                    orientation: orientationVal || "Norte",
+                    price: priceVal,
+                    availability: availabilityVal
+                });
+            }
+
+            if (parsedData.length > 0) {
+                inventoryData = parsedData;
+                processInventoryAndBuildFilters();
+            } else {
                 useLocalFallback();
             }
         }
@@ -623,9 +564,7 @@
                 filterVistas.innerHTML += `<option value="${v}">${v}</option>`;
             });
 
-            // Dynamically scale price range slider to match sheet data
             setupPriceSliderRange();
-
             calculateOverviewStats(inventoryData);
             applyFilters();
         }
@@ -650,7 +589,7 @@
         }
 
         function handlePriceSliderChange(val) {
-            document.getElementById("priceDisplayValue").innerText = `$${parseInt(val).toLocaleString()} MXN`;
+            document.getElementById("priceDisplayValue").innerText = `$${parseInt(val).toLocaleString()}`;
             applyFilters();
         }
 
@@ -664,16 +603,28 @@
             return typologyStr;
         }
 
+        // Calculates dynamic metrics corresponding to the live/local database structure
         function calculateOverviewStats(dataList) {
             const total = dataList.length;
             const available = dataList.filter(item => item.availability === "SI").length;
-            const reserved = dataList.filter(item => item.availability === "RESERVADO").length;
-            const sold = dataList.filter(item => item.availability === "VENDIDO").length;
+            
+            const totalA = dataList.filter(item => item.source === "Torre A").length;
+            const soldA = dataList.filter(item => item.source === "Torre A" && item.availability !== "SI").length;
+            const pctA = totalA > 0 ? ((soldA / totalA) * 100).toFixed(1) : "0.0";
 
+            const totalB = dataList.filter(item => item.source === "Torre B").length;
+            const soldB = dataList.filter(item => item.source === "Torre B" && item.availability !== "SI").length;
+            const pctB = totalB > 0 ? ((soldB / totalB) * 100).toFixed(1) : "0.0";
+
+            document.getElementById("pillsVentasA").innerText = `${soldA} de ${totalA} (${pctA}%)`;
+            document.getElementById("pillsVentasB").innerText = `${soldB} de ${totalB} (${pctB}%)`;
+            document.getElementById("pillsDispo").innerText = `${available} de ${total}`;
+            
             document.getElementById("statTotal").innerText = total;
             document.getElementById("statAvailable").innerText = available;
-            document.getElementById("statReserved").innerText = reserved;
-            document.getElementById("statSold").innerText = sold;
+            document.getElementById("statReserved").innerText = dataList.filter(item => item.availability === "RESERVADO").length;
+            document.getElementById("statSold").innerText = dataList.filter(item => item.availability === "VENDIDO").length;
+            document.getElementById("statPercent").innerText = total > 0 ? Math.round((available / total) * 100) + "%" : "0%";
         }
 
         function renderCatalog(items) {
@@ -690,36 +641,33 @@
             emptyState.classList.add("hidden");
             document.getElementById("filteredCount").innerText = `${items.length} unidad${items.length > 1 ? 'es' : ''}`;
 
-            // We render the FULL list of filtered items directly (no pagination limit)
             grid.innerHTML = items.map((unit, index) => {
                 const status = unit.availability;
-                let bgStyle = "bg-white border-gold-500/10 hover:border-gold-500 hover:shadow-2xl hover:shadow-gold-500/10";
+                let bgStyle = "bg-white border-slate-200 hover:border-gold-500 hover:shadow-xl";
                 let textStyle = "text-slate-950";
                 let descStyle = "text-slate-500";
                 let badgeMarkup = "";
 
                 // Color mappings: Blanco = Disponible, Amarillo = Reservado (No dispo), Rojo = Vendido (No dispo)
                 if (status === "SI") {
-                    bgStyle = "bg-[#0b1320]/60 border-slate-700/60 hover:border-gold-500 hover:shadow-2xl hover:shadow-gold-500/10";
-                    textStyle = "text-white";
-                    descStyle = "text-slate-400";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-400"></span>
+                    bgStyle = "bg-white border-slate-200 hover:shadow-2xl hover:border-gold-500";
+                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-slate-100 text-slate-800 border border-slate-200">
+                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500"></span>
                                      Disponible
                                    </span>`;
                 } else if (status === "RESERVADO") {
-                    bgStyle = "bg-[#c5a880]/10 border-gold-500/30";
-                    textStyle = "text-gold-200";
-                    descStyle = "text-gold-500/80";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-[#c5a880]/15 text-gold-400 border border-gold-500/40">
+                    bgStyle = "bg-amber-50 border-amber-300";
+                    textStyle = "text-amber-950";
+                    descStyle = "text-amber-800";
+                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-amber-200 text-amber-900 border border-amber-300">
                                      <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500"></span>
                                      Reservada
                                    </span>`;
                 } else {
-                    bgStyle = "bg-rose-950/15 border-rose-900/30";
-                    textStyle = "text-rose-200";
-                    descStyle = "text-rose-500/80";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-rose-950/30 text-rose-400 border border-rose-900/40">
+                    bgStyle = "bg-rose-50 border-rose-300";
+                    textStyle = "text-rose-950";
+                    descStyle = "text-rose-800";
+                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-rose-200 text-rose-900 border border-rose-300">
                                      <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-rose-500"></span>
                                      No Disponible
                                    </span>`;
@@ -727,7 +675,7 @@
 
                 const priceFormatted = unit.price && unit.price.trim() !== "" ? unit.price : (status === "RESERVADO" ? "Precio en Reserva" : "Vendido");
                 
-                // Construct clean model image path based on user instructions
+                // Construct clean model image path based on model names from the sheet
                 const cleanModel = unit.model.trim().toUpperCase().replace(/\s+/g, '-');
                 const imagePathPng = `${cleanModel}.png`;
                 const imagePathJpg = `${cleanModel}.jpg`;
@@ -736,18 +684,18 @@
                     <div onclick="openModal(${index})" class="border rounded-3xl p-6 transition-all duration-300 flex flex-col justify-between group ${bgStyle} cursor-pointer hover:-translate-y-1">
                         <div>
                             <div class="flex items-center justify-between mb-4">
-                                <span class="text-[9px] font-bold px-2.5 py-1 rounded bg-nautica-950 text-gold-500 border border-gold-500/20 tracking-widest uppercase">${unit.source}</span>
+                                <span class="text-[9px] font-bold px-2.5 py-1 rounded bg-nautica-900 text-gold-500 tracking-widest uppercase">${unit.source}</span>
                                 ${badgeMarkup}
                             </div>
 
                             <!-- Elegant Unit Rendering Space with dynamic fallback -->
-                            <div class="relative w-full h-44 mb-4 rounded-2xl overflow-hidden bg-nautica-950 flex items-center justify-center border border-gold-500/5">
+                            <div class="relative w-full h-44 mb-4 rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center border border-slate-200">
                                 <img src="${imagePathPng}" alt="Plano ${unit.model}" 
-                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                     class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" 
                                      onerror="this.onerror=null; this.src='${imagePathJpg}'; this.onerror=function(){ this.style.display='none'; this.nextElementSibling.classList.remove('hidden'); }">
-                                <div class="hidden absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-nautica-900/40">
+                                <div class="hidden absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-slate-50">
                                     <i data-lucide="home" class="w-8 h-8 text-gold-500/40 mb-2"></i>
-                                    <span class="text-[10px] font-serif text-gold-500/60 tracking-wider uppercase">Modelo ${unit.model}</span>
+                                    <span class="text-[10px] font-serif text-slate-500 tracking-wider uppercase">Modelo ${unit.model}</span>
                                 </div>
                             </div>
                             
@@ -755,27 +703,27 @@
                             <p class="text-xs ${descStyle} font-light tracking-widest mb-4 uppercase">Modelo: ${unit.model}</p>
                             
                             <div class="grid grid-cols-2 gap-2 mb-4">
-                                <div class="bg-black/20 p-2.5 rounded-xl flex items-center space-x-2 border border-gold-500/5">
-                                    <i data-lucide="bed" class="w-3.5 h-3.5 text-gold-500"></i>
-                                    <span class="text-[10px] font-medium ${textStyle}">${getBedroomsCategory(unit.typology)}</span>
+                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
+                                    <i data-lucide="bed" class="w-3.5 h-3.5 text-gold-600"></i>
+                                    <span class="text-[10px] font-bold ${textStyle}">${getBedroomsCategory(unit.typology)}</span>
                                 </div>
-                                <div class="bg-black/20 p-2.5 rounded-xl flex items-center space-x-2 border border-gold-500/5">
-                                    <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-gold-500"></i>
-                                    <span class="text-[10px] font-medium ${textStyle}">${unit.m2 ? unit.m2 + ' m²' : 'N/D'}</span>
+                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
+                                    <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-gold-600"></i>
+                                    <span class="text-[10px] font-bold ${textStyle}">${unit.m2 ? unit.m2 + ' m²' : 'N/D'}</span>
                                 </div>
-                                <div class="bg-black/20 p-2.5 rounded-xl flex items-center space-x-2 col-span-2 border border-gold-500/5">
-                                    <i data-lucide="eye" class="w-3.5 h-3.5 text-gold-500"></i>
-                                    <span class="text-[10px] font-medium truncate ${textStyle}">Vista: ${unit.view} (${unit.orientation})</span>
+                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2 col-span-2">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5 text-gold-600"></i>
+                                    <span class="text-[10px] font-bold truncate ${textStyle}">Vista: ${unit.view} (${unit.orientation})</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="border-t border-gold-500/10 pt-4 mt-2 flex items-center justify-between">
+                        <div class="border-t border-slate-200/80 pt-4 mt-2 flex items-center justify-between">
                             <div class="flex flex-col">
                                 <span class="text-[8px] font-bold uppercase tracking-widest ${descStyle}">Inversión</span>
                                 <span class="text-lg font-serif font-semibold ${textStyle}">${priceFormatted}</span>
                             </div>
-                            <button class="p-2.5 rounded-full bg-nautica-950 border border-gold-500/20 text-gold-500 group-hover:bg-gold-500 group-hover:text-nautica-950 transition-all shadow-md active:scale-95">
+                            <button class="p-2.5 rounded-full bg-nautica-900 text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all shadow-md active:scale-95">
                                 <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -786,6 +734,22 @@
             lucide.createIcons();
         }
 
+        function toggleSort(order) {
+            sortOrder = order;
+            
+            const btnAsc = document.getElementById("sortAsc");
+            const btnDesc = document.getElementById("sortDesc");
+
+            if (order === 'asc') {
+                btnAsc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-white bg-nautica-900";
+                btnDesc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-slate-700 bg-white";
+            } else {
+                btnAsc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-slate-700 bg-white";
+                btnDesc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-white bg-nautica-900";
+            }
+            applyFilters();
+        }
+
         function applyFilters() {
             const selectTorre = document.getElementById("filterTorre").value;
             const selectRecamaras = document.getElementById("filterRecamaras").value;
@@ -793,7 +757,6 @@
             const selectDisponibilidad = document.getElementById("filterDisponibilidad").value;
             const selectMaxPrice = parseInt(document.getElementById("priceSlider").value);
             const query = document.getElementById("searchBar").value.toLowerCase().trim();
-            const sortOrder = document.getElementById("sortOrder").value;
 
             filteredItems = inventoryData.filter(item => {
                 const passTorre = selectTorre === "all" || item.source === selectTorre;
@@ -846,13 +809,14 @@
             document.getElementById("filterVistas").value = "all";
             document.getElementById("filterDisponibilidad").value = "all";
             document.getElementById("searchBar").value = "";
-            document.getElementById("sortOrder").value = "default";
+            toggleSort('desc');
             
             const slider = document.getElementById("priceSlider");
             slider.value = slider.max;
             handlePriceSliderChange(slider.max);
         }
 
+        // HTML2Canvas high CORS high-fidelity screen exporter
         function takeSnapshot() {
             const captureArea = document.getElementById("captureArea");
             const btnText = document.getElementById("captureBtnText");
@@ -864,11 +828,10 @@
             btnIcon.classList.add("animate-spin");
             lucide.createIcons();
 
-            // Set delay to let any canvas or SVG styles fully update
             setTimeout(() => {
                 html2canvas(captureArea, {
-                    backgroundColor: "#030712",
-                    scale: 3, // Premium quality scaling
+                    backgroundColor: "#ffffff",
+                    scale: 3, 
                     useCORS: true,
                     logging: false
                 }).then(canvas => {
