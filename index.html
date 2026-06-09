@@ -128,15 +128,15 @@
                 </div>
                 <div class="bg-[#0b1320]/40 border border-gold-500/10 rounded-2xl p-5 backdrop-blur-md">
                     <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Disponibles (Blanco)</span>
-                    <span id="statAvailable" class="text-3xl font-light font-serif text-white">0</span>
+                    <span id="statAvailable" class="text-3xl font-light font-serif text-white font-semibold">0</span>
                 </div>
                 <div class="bg-[#0b1320]/40 border border-gold-500/10 rounded-2xl p-5 backdrop-blur-md">
                     <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Reservadas (Amarillo)</span>
-                    <span id="statReserved" class="text-3xl font-light font-serif text-gold-500">0</span>
+                    <span id="statReserved" class="text-3xl font-light font-serif text-gold-500 font-semibold">0</span>
                 </div>
                 <div class="bg-[#0b1320]/40 border border-gold-500/10 rounded-2xl p-5 backdrop-blur-md">
                     <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Vendidas (Rojo)</span>
-                    <span id="statSold" class="text-3xl font-light font-serif text-rose-500">0</span>
+                    <span id="statSold" class="text-3xl font-light font-serif text-rose-500 font-semibold">0</span>
                 </div>
             </div>
         </div>
@@ -373,6 +373,7 @@
     <script>
         let inventoryData = [];
         let filteredItems = [];
+        let tsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTafqCNoOZsFQESQJez6BkoOanJtx4XiK_jd794XU2zBUtjn7wKPJJW4Yo28zVcd--6FaXbenDbiuyZ/pub?output=tsv";
         
         // Brand logo dynamic safety triggers
         function handleLogoError() {
@@ -500,93 +501,98 @@
         }
 
         function parseTsvData(tsvText) {
-            const rows = tsvText.split("\n").map(r => r.split("\t"));
-            if (rows.length < 2) {
-                useLocalFallback();
-                return;
-            }
-
-            // High robust header matching
-            let headerRowIndex = 0;
-            for (let i = 0; i < Math.min(rows.length, 10); i++) {
-                const hasUnit = rows[i].some(cell => {
-                    const val = cell.trim().toUpperCase();
-                    return val.includes("UNIDAD") || val.includes("UNIT") || val.includes("DEPTO");
-                });
-                if (hasUnit) {
-                    headerRowIndex = i;
-                    break;
-                }
-            }
-
-            const rawHeaders = rows[headerRowIndex].map(h => h.trim().toUpperCase());
-            
-            const colIndex = {
-                source: rawHeaders.findIndex(h => h.includes("TORRE") || h.includes("SOURCE")),
-                unit: rawHeaders.findIndex(h => h.includes("UNIDAD") || h.includes("UNIT")),
-                typology: rawHeaders.findIndex(h => h.includes("RECAMARAS") || h.includes("TYPOLOGY") || h.includes("TIPO")),
-                model: rawHeaders.findIndex(h => h.includes("MODELO") || h.includes("MODEL")),
-                m2: rawHeaders.findIndex(h => h.includes("M2") || h.includes("TOTAL")),
-                view: rawHeaders.findIndex(h => h.includes("VISTA") || h.includes("VIEW")),
-                orientation: rawHeaders.findIndex(h => h.includes("ORIENTACIÓN") || h.includes("ORIENTATION")),
-                price: rawHeaders.findIndex(h => h.includes("PRECIO") || h.includes("PRICE")),
-                availability: rawHeaders.findIndex(h => h.includes("DISPONIBILIDAD") || h.includes("ESTATUS"))
-            };
-
-            const parsedData = [];
-            let lastTorre = "Torre A";
-
-            for (let i = headerRowIndex + 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (row.length < 2) continue;
-
-                let sourceVal = colIndex.source !== -1 ? row[colIndex.source]?.trim() : "";
-                if (sourceVal) {
-                    lastTorre = sourceVal;
-                } else {
-                    sourceVal = lastTorre;
+            try {
+                const rows = tsvText.split("\n").map(r => r.split("\t"));
+                if (rows.length < 2) {
+                    useLocalFallback();
+                    return;
                 }
 
-                const unitVal = colIndex.unit !== -1 ? row[colIndex.unit]?.trim() : "";
-                if (!unitVal) continue; // Skip lines with empty units
-
-                const typologyVal = colIndex.typology !== -1 ? row[colIndex.typology]?.trim() : "2 R";
-                const modelVal = colIndex.model !== -1 ? row[colIndex.model]?.trim() : "Específico";
-                const m2Val = colIndex.m2 !== -1 ? parseFloat(row[colIndex.m2]?.replace(/[^\d.]/g, '')) : 100;
-                const viewVal = colIndex.view !== -1 ? row[colIndex.view]?.trim() : "Exterior";
-                const orientationVal = colIndex.orientation !== -1 ? row[colIndex.orientation]?.trim() : "Norte";
-                const priceVal = colIndex.price !== -1 ? row[colIndex.price]?.trim() : "";
-                
-                // Maps: Blanco (SI) | Amarillo (RESERVADO) | Rojo (VENDIDO)
-                let availabilityVal = "SI";
-                if (colIndex.availability !== -1) {
-                    const val = row[colIndex.availability]?.trim().toUpperCase();
-                    if (val.includes("RESERV") || val === "AMARILLO" || val === "NO DISPONIBLE") {
-                        availabilityVal = "RESERVADO";
-                    } else if (val.includes("VEND") || val === "ROJO" || val === "NO" || val === "VENDIDA") {
-                        availabilityVal = "VENDIDO";
+                // High robust header matching
+                let headerRowIndex = 0;
+                for (let i = 0; i < Math.min(rows.length, 10); i++) {
+                    const hasUnit = rows[i].some(cell => {
+                        const val = cell.trim().toUpperCase();
+                        return val.includes("UNIDAD") || val.includes("UNIT") || val.includes("DEPTO");
+                    });
+                    if (hasUnit) {
+                        headerRowIndex = i;
+                        break;
                     }
-                } else {
-                    availabilityVal = priceVal ? "SI" : "VENDIDO";
                 }
 
-                parsedData.push({
-                    source: sourceVal,
-                    unit: unitVal,
-                    typology: typologyVal,
-                    model: modelVal,
-                    m2: isNaN(m2Val) ? 0 : m2Val,
-                    view: viewVal || "Exterior",
-                    orientation: orientationVal || "Norte",
-                    price: priceVal,
-                    availability: availabilityVal
-                });
-            }
+                const rawHeaders = rows[headerRowIndex].map(h => h.trim().toUpperCase());
+                
+                const colIndex = {
+                    source: rawHeaders.findIndex(h => h.includes("TORRE") || h.includes("SOURCE")),
+                    unit: rawHeaders.findIndex(h => h.includes("UNIDAD") || h.includes("UNIT")),
+                    typology: rawHeaders.findIndex(h => h.includes("RECAMARAS") || h.includes("TYPOLOGY") || h.includes("TIPO")),
+                    model: rawHeaders.findIndex(h => h.includes("MODELO") || h.includes("MODEL")),
+                    m2: rawHeaders.findIndex(h => h.includes("M2") || h.includes("TOTAL")),
+                    view: rawHeaders.findIndex(h => h.includes("VISTA") || h.includes("VIEW")),
+                    orientation: rawHeaders.findIndex(h => h.includes("ORIENTACIÓN") || h.includes("ORIENTATION")),
+                    price: rawHeaders.findIndex(h => h.includes("PRECIO") || h.includes("PRICE")),
+                    availability: rawHeaders.findIndex(h => h.includes("DISPONIBILIDAD") || h.includes("ESTATUS"))
+                };
 
-            if (parsedData.length > 0) {
-                inventoryData = parsedData;
-                processInventoryAndBuildFilters();
-            } else {
+                const parsedData = [];
+                let lastTorre = "Torre A";
+
+                for (let i = headerRowIndex + 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row.length < 2) continue;
+
+                    let sourceVal = colIndex.source !== -1 ? row[colIndex.source]?.trim() : "";
+                    if (sourceVal) {
+                        lastTorre = sourceVal;
+                    } else {
+                        sourceVal = lastTorre;
+                    }
+
+                    const unitVal = colIndex.unit !== -1 ? row[colIndex.unit]?.trim() : "";
+                    if (!unitVal) continue; // Skip lines with empty units
+
+                    const typologyVal = colIndex.typology !== -1 ? row[colIndex.typology]?.trim() : "2 R";
+                    const modelVal = colIndex.model !== -1 ? row[colIndex.model]?.trim() : "Específico";
+                    const m2Val = colIndex.m2 !== -1 ? parseFloat(row[colIndex.m2]?.replace(/[^\d.]/g, '')) : 100;
+                    const viewVal = colIndex.view !== -1 ? row[colIndex.view]?.trim() : "Exterior";
+                    const orientationVal = colIndex.orientation !== -1 ? row[colIndex.orientation]?.trim() : "Norte";
+                    const priceVal = colIndex.price !== -1 ? row[colIndex.price]?.trim() : "";
+                    
+                    // Maps: Blanco (SI) | Amarillo (RESERVADO) | Rojo (VENDIDO)
+                    let availabilityVal = "SI";
+                    if (colIndex.availability !== -1) {
+                        const val = row[colIndex.availability]?.trim().toUpperCase();
+                        if (val.includes("RESERV") || val === "AMARILLO" || val === "NO DISPONIBLE") {
+                            availabilityVal = "RESERVADO";
+                        } else if (val.includes("VEND") || val === "ROJO" || val === "NO" || val === "VENDIDA") {
+                            availabilityVal = "VENDIDO";
+                        }
+                    } else {
+                        availabilityVal = priceVal ? "SI" : "VENDIDO";
+                    }
+
+                    parsedData.push({
+                        source: sourceVal,
+                        unit: unitVal,
+                        typology: typologyVal,
+                        model: modelVal,
+                        m2: isNaN(m2Val) ? 0 : m2Val,
+                        view: viewVal || "Exterior",
+                        orientation: orientationVal || "Norte",
+                        price: priceVal,
+                        availability: availabilityVal
+                    });
+                }
+
+                if (parsedData.length > 0) {
+                    inventoryData = parsedData;
+                    processInventoryAndBuildFilters();
+                } else {
+                    useLocalFallback();
+                }
+            } catch (err) {
+                console.warn("TSV Parsing crashed. Using luxury fallback catalog.", err);
                 useLocalFallback();
             }
         }
@@ -663,13 +669,11 @@
             const available = dataList.filter(item => item.availability === "SI").length;
             const reserved = dataList.filter(item => item.availability === "RESERVADO").length;
             const sold = dataList.filter(item => item.availability === "VENDIDO").length;
-            const percentAvailable = total > 0 ? Math.round((available / total) * 100) : 0;
 
             document.getElementById("statTotal").innerText = total;
             document.getElementById("statAvailable").innerText = available;
             document.getElementById("statReserved").innerText = reserved;
             document.getElementById("statSold").innerText = sold;
-            document.getElementById("statPercent").innerText = percentAvailable + "%";
         }
 
         function renderCatalog(items) {
@@ -696,24 +700,26 @@
 
                 // Color mappings: Blanco = Disponible, Amarillo = Reservado (No dispo), Rojo = Vendido (No dispo)
                 if (status === "SI") {
-                    bgStyle = "bg-white border-slate-200 hover:shadow-2xl hover:shadow-gold-500/10";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-slate-100 text-slate-800 border border-slate-200">
-                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500"></span>
+                    bgStyle = "bg-[#0b1320]/60 border-slate-700/60 hover:border-gold-500 hover:shadow-2xl hover:shadow-gold-500/10";
+                    textStyle = "text-white";
+                    descStyle = "text-slate-400";
+                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-400"></span>
                                      Disponible
                                    </span>`;
                 } else if (status === "RESERVADO") {
-                    bgStyle = "bg-amber-100 border-amber-300";
-                    textStyle = "text-amber-950";
-                    descStyle = "text-amber-800";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-amber-200 text-amber-900 border border-amber-300">
+                    bgStyle = "bg-[#c5a880]/10 border-gold-500/30";
+                    textStyle = "text-gold-200";
+                    descStyle = "text-gold-500/80";
+                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-[#c5a880]/15 text-gold-400 border border-gold-500/40">
                                      <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500"></span>
                                      Reservada
                                    </span>`;
                 } else {
-                    bgStyle = "bg-rose-100 border-rose-300";
-                    textStyle = "text-rose-950";
-                    descStyle = "text-rose-800";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-rose-200 text-rose-900 border border-rose-300">
+                    bgStyle = "bg-rose-950/15 border-rose-900/30";
+                    textStyle = "text-rose-200";
+                    descStyle = "text-rose-500/80";
+                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-rose-950/30 text-rose-400 border border-rose-900/40">
                                      <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-rose-500"></span>
                                      No Disponible
                                    </span>`;
@@ -721,39 +727,55 @@
 
                 const priceFormatted = unit.price && unit.price.trim() !== "" ? unit.price : (status === "RESERVADO" ? "Precio en Reserva" : "Vendido");
                 
+                // Construct clean model image path based on user instructions
+                const cleanModel = unit.model.trim().toUpperCase().replace(/\s+/g, '-');
+                const imagePathPng = `${cleanModel}.png`;
+                const imagePathJpg = `${cleanModel}.jpg`;
+
                 return `
                     <div onclick="openModal(${index})" class="border rounded-3xl p-6 transition-all duration-300 flex flex-col justify-between group ${bgStyle} cursor-pointer hover:-translate-y-1">
                         <div>
                             <div class="flex items-center justify-between mb-4">
-                                <span class="text-[9px] font-bold px-2.5 py-1 rounded bg-nautica-950 text-gold-500 tracking-widest uppercase">${unit.source}</span>
+                                <span class="text-[9px] font-bold px-2.5 py-1 rounded bg-nautica-950 text-gold-500 border border-gold-500/20 tracking-widest uppercase">${unit.source}</span>
                                 ${badgeMarkup}
+                            </div>
+
+                            <!-- Elegant Unit Rendering Space with dynamic fallback -->
+                            <div class="relative w-full h-44 mb-4 rounded-2xl overflow-hidden bg-nautica-950 flex items-center justify-center border border-gold-500/5">
+                                <img src="${imagePathPng}" alt="Plano ${unit.model}" 
+                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                     onerror="this.onerror=null; this.src='${imagePathJpg}'; this.onerror=function(){ this.style.display='none'; this.nextElementSibling.classList.remove('hidden'); }">
+                                <div class="hidden absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-nautica-900/40">
+                                    <i data-lucide="home" class="w-8 h-8 text-gold-500/40 mb-2"></i>
+                                    <span class="text-[10px] font-serif text-gold-500/60 tracking-wider uppercase">Modelo ${unit.model}</span>
+                                </div>
                             </div>
                             
                             <h4 class="text-2xl font-serif tracking-wide ${textStyle}">Unidad ${unit.unit}</h4>
                             <p class="text-xs ${descStyle} font-light tracking-widest mb-4 uppercase">Modelo: ${unit.model}</p>
                             
                             <div class="grid grid-cols-2 gap-2 mb-4">
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
-                                    <i data-lucide="bed" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold ${textStyle}">${getBedroomsCategory(unit.typology)}</span>
+                                <div class="bg-black/20 p-2.5 rounded-xl flex items-center space-x-2 border border-gold-500/5">
+                                    <i data-lucide="bed" class="w-3.5 h-3.5 text-gold-500"></i>
+                                    <span class="text-[10px] font-medium ${textStyle}">${getBedroomsCategory(unit.typology)}</span>
                                 </div>
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
-                                    <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold ${textStyle}">${unit.m2 ? unit.m2 + ' m²' : 'N/D'}</span>
+                                <div class="bg-black/20 p-2.5 rounded-xl flex items-center space-x-2 border border-gold-500/5">
+                                    <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-gold-500"></i>
+                                    <span class="text-[10px] font-medium ${textStyle}">${unit.m2 ? unit.m2 + ' m²' : 'N/D'}</span>
                                 </div>
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2 col-span-2">
-                                    <i data-lucide="eye" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold truncate ${textStyle}">Vista: ${unit.view} (${unit.orientation})</span>
+                                <div class="bg-black/20 p-2.5 rounded-xl flex items-center space-x-2 col-span-2 border border-gold-500/5">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5 text-gold-500"></i>
+                                    <span class="text-[10px] font-medium truncate ${textStyle}">Vista: ${unit.view} (${unit.orientation})</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="border-t border-black/5 pt-4 mt-2 flex items-center justify-between">
+                        <div class="border-t border-gold-500/10 pt-4 mt-2 flex items-center justify-between">
                             <div class="flex flex-col">
                                 <span class="text-[8px] font-bold uppercase tracking-widest ${descStyle}">Inversión</span>
                                 <span class="text-lg font-serif font-semibold ${textStyle}">${priceFormatted}</span>
                             </div>
-                            <button class="p-2.5 rounded-full bg-nautica-950 text-gold-500 group-hover:bg-gold-500 group-hover:text-nautica-950 transition-all shadow-md active:scale-95">
+                            <button class="p-2.5 rounded-full bg-nautica-950 border border-gold-500/20 text-gold-500 group-hover:bg-gold-500 group-hover:text-nautica-950 transition-all shadow-md active:scale-95">
                                 <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
                             </button>
                         </div>
