@@ -313,11 +313,26 @@
                             </div>
                         </div>
 
-                        <!-- Payment Plans dynamic calculator -->
+                        <!-- Payment Plans select dropdown structure -->
                         <div class="border-t border-slate-100 pt-6 space-y-4">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Planes de Financiamiento Especiales</h5>
-                            <div id="paymentPlansContainer" class="space-y-4">
-                                <!-- Dynamic plans injected here -->
+                            <div class="flex flex-col gap-2">
+                                <label for="paymentPlanSelect" class="text-xs font-semibold text-slate-600">Seleccionar Esquema de Pago:</label>
+                                <div class="relative">
+                                    <select id="paymentPlanSelect" onchange="handlePaymentPlanSelectChange()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-gold-500 cursor-pointer appearance-none">
+                                        <option value="standard" selected>Esquema Standard: 30/70 (30% Enganche, 70% Entrega)</option>
+                                        <option value="preferred">Esquema Preferente: 30/40/30 (4% Desc - 30% Enganche, 40% Const., 30% Entrega)</option>
+                                        <option value="elite">Esquema Élite: 50/30/20 (7% Desc - 50% Enganche, 30% Const., 20% Entrega)</option>
+                                        <option value="premium">Esquema Premium: 80/20 (12% Desc - 80% Enganche, 20% Entrega)</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-400">
+                                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Dynamic detail of chosen plan -->
+                            <div id="paymentPlansContainer">
+                                <!-- Target element for selected interactive calculations -->
                             </div>
                         </div>
                     </div>
@@ -478,6 +493,13 @@
         }
 
         window.onload = function() {
+            // Setup Tab Favicon dynamic integration
+            const favLink = document.createElement('link');
+            favLink.rel = 'icon';
+            favLink.type = 'image/png';
+            favLink.href = 'NAUTT.png';
+            document.head.appendChild(favLink);
+
             // First load the local master list to guarantee instant render capability
             inventoryData = buildCompleteLocalInventory();
             fetchInventoryData();
@@ -1006,8 +1028,12 @@
                 }
             }
 
-            // Render Payment options
-            calculateAndRenderPaymentPlans(item);
+            // Select Standard plan by default
+            const planSelect = document.getElementById("paymentPlanSelect");
+            if (planSelect) planSelect.value = "standard";
+
+            // Render default Standard payment option details
+            calculateAndRenderSelectedPlan(item, "standard");
 
             const modal = document.getElementById("unitModal");
             if (modal) modal.classList.remove("hidden");
@@ -1022,7 +1048,14 @@
             document.body.classList.remove("overflow-hidden");
         }
 
-        function calculateAndRenderPaymentPlans(item) {
+        function handlePaymentPlanSelectChange() {
+            const planSelect = document.getElementById("paymentPlanSelect");
+            if (planSelect && selectedItemForPDF) {
+                calculateAndRenderSelectedPlan(selectedItemForPDF, planSelect.value);
+            }
+        }
+
+        function calculateAndRenderSelectedPlan(item, chosenPlanKey) {
             const container = document.getElementById("paymentPlansContainer");
             if (!container) return;
 
@@ -1032,9 +1065,9 @@
                 return;
             }
 
-            // Payment plan structures
-            const plans = [
-                {
+            // Plan configuration parameters matches exactly the user specifications
+            const planDetails = {
+                standard: {
                     title: "Esquema Standard: 30/70",
                     label: "30% Enganche, 70% a la Entrega",
                     discountPct: 0,
@@ -1042,7 +1075,7 @@
                     constructionPct: 0,
                     deliveryPct: 70
                 },
-                {
+                preferred: {
                     title: "Esquema Preferente: 30/40/30",
                     label: "30% Enganche, 40% durante construcción, 30% a la Entrega",
                     discountPct: 4,
@@ -1050,7 +1083,7 @@
                     constructionPct: 40,
                     deliveryPct: 30
                 },
-                {
+                elite: {
                     title: "Esquema Élite: 50/30/20",
                     label: "50% Enganche, 30% durante construcción, 20% a la Entrega",
                     discountPct: 7,
@@ -1058,7 +1091,7 @@
                     constructionPct: 30,
                     deliveryPct: 20
                 },
-                {
+                premium: {
                     title: "Esquema Premium: 80/20",
                     label: "80% Enganche, 20% a la Entrega",
                     discountPct: 12,
@@ -1066,58 +1099,59 @@
                     constructionPct: 0,
                     deliveryPct: 20
                 }
-            ];
+            };
 
-            container.innerHTML = plans.map(plan => {
-                const discountVal = basePrice * (plan.discountPct / 100);
-                const finalPrice = basePrice - discountVal;
+            const config = planDetails[chosenPlanKey] || planDetails.standard;
+            const discountVal = basePrice * (config.discountPct / 100);
+            const finalPrice = basePrice - discountVal;
 
-                const initialPayment = finalPrice * (plan.initialPct / 100);
-                const constructionPayment = finalPrice * (plan.constructionPct / 100);
-                const deliveryPayment = finalPrice * (plan.deliveryPct / 100);
+            const initialPayment = finalPrice * (config.initialPct / 100);
+            const constructionPayment = finalPrice * (config.constructionPct / 100);
+            const deliveryPayment = finalPrice * (config.deliveryPct / 100);
 
-                let priceDisplay = "";
-                if (plan.discountPct > 0) {
-                    priceDisplay = `
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xs text-slate-400 line-through">$${basePrice.toLocaleString()}</span>
-                            <span class="text-sm font-bold text-emerald-600 font-mono">$${finalPrice.toLocaleString()} MXN</span>
-                            <span class="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100">-${plan.discountPct}%</span>
-                        </div>
-                    `;
-                } else {
-                    priceDisplay = `<span class="text-sm font-bold text-slate-800 font-mono">$${basePrice.toLocaleString()} MXN</span>`;
-                }
-
-                return `
-                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-3 hover:border-gold-500 transition-colors">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
-                            <div>
-                                <h6 class="text-xs font-bold text-nautica-900">${plan.title}</h6>
-                                <p class="text-[10px] text-slate-400 font-medium">${plan.label}</p>
-                            </div>
-                            <div>
-                                ${priceDisplay}
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-2 border-t border-slate-200/60 pt-2.5 text-[10px]">
-                            <div class="flex flex-col">
-                                <span class="text-slate-400 uppercase font-semibold">Enganche (${plan.initialPct}%)</span>
-                                <span class="font-bold text-slate-700 font-mono">$${initialPayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-slate-400 uppercase font-semibold">Construcción (${plan.constructionPct}%)</span>
-                                <span class="font-bold text-slate-700 font-mono">$${constructionPayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-slate-400 uppercase font-semibold">Entrega (${plan.deliveryPct}%)</span>
-                                <span class="font-bold text-slate-700 font-mono">$${deliveryPayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-                            </div>
-                        </div>
+            let priceOutputHtml = "";
+            if (config.discountPct > 0) {
+                priceOutputHtml = `
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs text-slate-400 line-through">$${basePrice.toLocaleString()}</span>
+                        <span class="text-sm font-bold text-emerald-600 font-mono">$${finalPrice.toLocaleString()} MXN</span>
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100">-${config.discountPct}% de Descuento Especial</span>
                     </div>
                 `;
-            }).join('');
+            } else {
+                priceOutputHtml = `
+                    <span class="text-sm font-bold text-slate-800 font-mono">$${basePrice.toLocaleString()} MXN</span>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 space-y-4 animate-fade-in">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                        <div>
+                            <h6 class="text-xs font-bold text-nautica-900 uppercase tracking-wider">${config.title}</h6>
+                            <p class="text-[10px] text-slate-400 font-medium">${config.label}</p>
+                        </div>
+                        <div>
+                            ${priceOutputHtml}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 border-t border-slate-200/60 pt-3 text-[10px] text-slate-800">
+                        <div class="flex flex-col">
+                            <span class="text-slate-400 uppercase font-semibold">Enganche (${config.initialPct}%)</span>
+                            <span class="font-bold text-slate-800 font-mono mt-0.5">$${initialPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-slate-400 uppercase font-semibold">Construcción (${config.constructionPct}%)</span>
+                            <span class="font-bold text-slate-800 font-mono mt-0.5">$${constructionPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-slate-400 uppercase font-semibold">Entrega (${config.deliveryPct}%)</span>
+                            <span class="font-bold text-slate-800 font-mono mt-0.5">$${deliveryPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function openLightbox() {
@@ -1213,82 +1247,35 @@
                     
                     const basePrice = getNumericPrice(item.price);
                     
-                    // --- PAGE 1: Luxury Presentation & Details ---
-                    // Draw backgrounds and elegant boundaries
-                    pdf.setFillColor(11, 28, 48); // Nautica Navy Brand Color
-                    pdf.rect(0, 0, 210, 42, 'F');
+                    // Header style matching screenshot aesthetics (Solid Navy block)
+                    pdf.setFillColor(11, 28, 48); // Nautica Navy
+                    pdf.rect(0, 0, 210, 38, 'F');
                     
-                    // Header text
+                    // White dynamic title text
                     pdf.setTextColor(255, 255, 255);
                     pdf.setFont("serif", "bold");
                     pdf.setFontSize(22);
                     pdf.text("NAUTICA RESIDENCES", 105, 18, { align: "center" });
                     
-                    pdf.setTextColor(197, 168, 128); // Gold Color
+                    // Golden brand subheader matches screenshot reference
+                    pdf.setTextColor(197, 168, 128); // Nautica Gold
                     pdf.setFont("sans", "normal");
                     pdf.setFontSize(9);
                     pdf.text("BY NAUMA", 105, 25, { align: "center" });
 
-                    // Golden divider
-                    pdf.setDrawColor(197, 168, 128);
-                    pdf.setLineWidth(1);
-                    pdf.line(0, 42, 210, 42);
+                    // Golden separation bar Y=38 to 39
+                    pdf.setFillColor(197, 168, 128);
+                    pdf.rect(0, 38, 210, 1.2, 'F');
 
-                    // Attention personalized block matching exact screenshot specifications
+                    // Left Column: Residency Specs table (Compact to fit on a single page)
                     pdf.setTextColor(11, 28, 48);
                     pdf.setFont("sans", "bold");
-                    pdf.setFontSize(9);
-                    pdf.text("ATENCIÓN PERSONALIZADA", 15, 54);
-                    
-                    pdf.setDrawColor(220, 220, 220);
-                    pdf.line(15, 57, 195, 57);
-
-                    pdf.setFont("sans", "normal");
-                    pdf.setTextColor(80, 80, 80);
-                    // Alexis Garzón Advisor info as listed on PDF template
-                    pdf.text("Asesor:", 15, 64);
-                    pdf.setFont("sans", "bold");
-                    pdf.setTextColor(11, 28, 48);
-                    pdf.text("Alexis Garzón", 40, 64);
-
-                    pdf.setFont("sans", "normal");
-                    pdf.setTextColor(80, 80, 80);
-                    pdf.text("Teléfono:", 15, 71);
-                    pdf.setFont("sans", "bold");
-                    pdf.setTextColor(11, 28, 48);
-                    pdf.text("9984059246", 40, 71);
-
-                    pdf.setFont("sans", "normal");
-                    pdf.setTextColor(80, 80, 80);
-                    pdf.text("Correo:", 15, 78);
-                    pdf.setFont("sans", "bold");
-                    pdf.setTextColor(11, 28, 48);
-                    pdf.text("alexis@nauticaresidencescancun.com", 40, 78);
-
-                    // Quotation Dates
-                    const today = new Date();
-                    const formattedToday = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
-                    const nextWeek = new Date(today);
-                    nextWeek.setDate(today.getDate() + 7);
-                    const formattedNextWeek = `${String(nextWeek.getDate()).padStart(2, '0')}/${String(nextWeek.getMonth() + 1).padStart(2, '0')}/${nextWeek.getFullYear()}`;
-
-                    pdf.setFont("sans", "normal");
-                    pdf.setTextColor(80, 80, 80);
-                    pdf.text("FECHA DE COTIZACIÓN:", 120, 64);
-                    pdf.setFont("sans", "bold");
-                    pdf.text(formattedToday, 175, 64);
-
-                    pdf.setFont("sans", "normal");
-                    pdf.text("FECHA VIGENCIA DE COTIZACIÓN:", 120, 71);
-                    pdf.setFont("sans", "bold");
-                    pdf.text(formattedNextWeek, 175, 71);
-
-                    // Specifications details table matches PDF
-                    pdf.setFont("sans", "bold");
-                    pdf.setTextColor(11, 28, 48);
                     pdf.setFontSize(10);
-                    pdf.text("DETALLES DE LA UNIDAD", 15, 93);
-                    pdf.line(15, 96, 195, 96);
+                    pdf.text("FICHA DE LA RESIDENCIA", 15, 52);
+                    
+                    pdf.setDrawColor(210, 210, 210);
+                    pdf.setLineWidth(0.5);
+                    pdf.line(15, 55, 100, 55);
 
                     const specRows = [
                         ["Desarrollo", "Náutica Residences"],
@@ -1296,109 +1283,145 @@
                         ["Unidad", item.unit],
                         ["Recámaras/Baños", item.typology],
                         ["Metraje Total", `${item.m2} m²`],
-                        ["PRECIO DE LISTA", basePrice !== 999999999 ? `$${basePrice.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})} MXN` : "Consultar precio"],
+                        ["Precio de Lista", basePrice !== 999999999 ? `$${basePrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} MXN` : "Consultar precio"],
                         ["Fecha de Entrega", "Diciembre 2028"]
                     ];
 
-                    let currentY = 104;
+                    let specY = 62;
                     specRows.forEach(row => {
                         pdf.setFont("sans", "normal");
-                        pdf.setTextColor(100, 100, 100);
-                        pdf.text(row[0], 20, currentY);
-                        
-                        pdf.setFont("sans", "bold");
-                        pdf.setTextColor(11, 28, 48);
-                        pdf.text(row[1], 120, currentY);
-
-                        pdf.setDrawColor(245, 245, 245);
-                        pdf.line(15, currentY + 3, 195, currentY + 3);
-                        currentY += 9;
-                    });
-
-                    // Floorplan rendering in high quality
-                    pdf.setFont("sans", "bold");
-                    pdf.setTextColor(197, 168, 128);
-                    pdf.setFontSize(8);
-                    pdf.text("FECHA DE ENTREGA AMBAS TORRES: DICIEMBRE 2028", 15, 175);
-
-                    // Disclaimer Note matching template
-                    pdf.setFont("sans", "normal");
-                    pdf.setTextColor(120, 120, 120);
-                    pdf.setFontSize(7.5);
-                    const noteText = "NOTA: La presente cotización no representa obligación de venta sobre el desarrollador, es de carácter informativo y tendrá una vigencia de 7 días naturales a partir de la fecha que se plasma en la misma. Las imágenes pueden variar y sirven únicamente de manera ilustrativa.";
-                    const splitNote = pdf.splitTextToSize(noteText, 180);
-                    pdf.text(splitNote, 15, 183);
-
-                    // --- PAGE 2: Payment Schemes ---
-                    pdf.addPage();
-                    
-                    pdf.setFillColor(11, 28, 48);
-                    pdf.rect(0, 0, 210, 30, 'F');
-                    
-                    pdf.setTextColor(255, 255, 255);
-                    pdf.setFont("serif", "bold");
-                    pdf.setFontSize(16);
-                    pdf.text("ESQUEMAS DE PAGO DISPONIBLES", 105, 18, { align: "center" });
-
-                    pdf.setDrawColor(197, 168, 128);
-                    pdf.setLineWidth(1);
-                    pdf.line(0, 30, 210, 30);
-
-                    // Render financial breakdowns
-                    const plans = [
-                        { title: "SEGUNDO ESQUEMA: PLAN 30/70", desc: "30% Inicial, 70% Entrega", disc: 0, initialPct: 30, constructionPct: 0, deliveryPct: 70 },
-                        { title: "TERCER ESQUEMA: PLAN 30/40/30", desc: "30% Inicial, 40% Construcción, 30% Entrega (4% Desc)", disc: 4, initialPct: 30, constructionPct: 40, deliveryPct: 30 },
-                        { title: "CUARTO ESQUEMA: PLAN 50/30/20", desc: "50% Inicial, 30% Construcción, 20% Entrega (7% Desc)", disc: 7, initialPct: 50, constructionPct: 30, deliveryPct: 20 },
-                        { title: "QUINTO ESQUEMA: PLAN 80/20", desc: "80% Inicial, 20% Entrega (12% Desc)", disc: 12, initialPct: 80, constructionPct: 0, deliveryPct: 20 }
-                    ];
-
-                    let planY = 45;
-                    plans.forEach(plan => {
-                        const discountVal = basePrice * (plan.disc / 100);
-                        const finalPrice = basePrice - discountVal;
-
-                        const initialPayment = finalPrice * (plan.initialPct / 100);
-                        const constructionPayment = finalPrice * (plan.constructionPct / 100);
-                        const deliveryPayment = finalPrice * (plan.deliveryPct / 100);
-
-                        pdf.setFont("sans", "bold");
-                        pdf.setFontSize(10);
-                        pdf.setTextColor(11, 28, 48);
-                        pdf.text(plan.title, 15, planY);
-                        
-                        pdf.setFont("sans", "normal");
-                        pdf.setFontSize(8.5);
-                        pdf.setTextColor(100, 100, 100);
-                        pdf.text(plan.desc, 15, planY + 5);
-
-                        pdf.setFont("sans", "bold");
-                        pdf.setFontSize(10);
-                        pdf.setTextColor(197, 168, 128);
-                        pdf.text(`$${finalPrice.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})} MXN`, 195, planY, { align: "right" });
-
-                        pdf.setDrawColor(230, 230, 230);
-                        pdf.line(15, planY + 8, 195, planY + 8);
-
-                        // Grid headers
-                        pdf.setFont("sans", "normal");
+                        pdf.setTextColor(110, 110, 110);
                         pdf.setFontSize(8);
-                        pdf.setTextColor(140, 140, 140);
-                        pdf.text("Firma Inicial", 20, planY + 13);
-                        pdf.text("Durante Construcción", 80, planY + 13);
-                        pdf.text("Escrituración a Entrega", 140, planY + 13);
-
-                        // Grid values
+                        pdf.text(row[0], 15, specY);
+                        
                         pdf.setFont("sans", "bold");
-                        pdf.setFontSize(9);
                         pdf.setTextColor(11, 28, 48);
-                        pdf.text(`$${initialPayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`, 20, planY + 18);
-                        pdf.text(`$${constructionPayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`, 80, planY + 18);
-                        pdf.text(`$${deliveryPayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}`, 140, planY + 18);
+                        pdf.setFontSize(8.5);
+                        pdf.text(row[1], 100, specY, { align: "right" });
 
-                        planY += 34;
+                        pdf.setDrawColor(240, 240, 240);
+                        pdf.line(15, specY + 2.5, 100, specY + 2.5);
+                        specY += 8;
                     });
 
-                    // Save document
+                    // Right Column: Model Blueprint distribution Image inline (Safely loaded)
+                    pdf.setFont("sans", "bold");
+                    pdf.setTextColor(11, 28, 48);
+                    pdf.setFontSize(10);
+                    pdf.text("PLANO DE DISTRIBUCIÓN", 115, 52);
+                    pdf.line(115, 55, 195, 55);
+
+                    const cleanModel = item.model.trim().toUpperCase().replace(/\s+/g, '-');
+                    const imgSource = document.getElementById("modalUnitImg");
+                    if (imgSource && imgSource.style.display !== "none" && imgSource.src) {
+                        try {
+                            pdf.addImage(imgSource, 'PNG', 115, 60, 80, 50, undefined, 'FAST');
+                        } catch (e) {
+                            // Fallback blueprint box drawing if secure canvas addImage fails
+                            pdf.setDrawColor(197, 168, 128);
+                            pdf.rect(115, 60, 80, 50);
+                            pdf.setFont("sans", "normal");
+                            pdf.setTextColor(120, 120, 120);
+                            pdf.setFontSize(8);
+                            pdf.text(`Modelo: ${item.model}`, 155, 85, { align: "center" });
+                        }
+                    } else {
+                        // Drawing elegant fallback bounds
+                        pdf.setDrawColor(197, 168, 128);
+                        pdf.rect(115, 60, 80, 50);
+                        pdf.setFont("sans", "normal");
+                        pdf.setTextColor(120, 120, 120);
+                        pdf.setFontSize(8);
+                        pdf.text(`Modelo: ${item.model}`, 155, 85, { align: "center" });
+                    }
+
+                    // Bottom Row: Dynamic chosen payment plan breakdown
+                    pdf.setFont("sans", "bold");
+                    pdf.setTextColor(11, 28, 48);
+                    pdf.setFontSize(10);
+                    pdf.text("ESQUEMA DE FINANCIAMIENTO SELECCIONADO", 15, 128);
+                    pdf.line(15, 131, 195, 131);
+
+                    const planSelect = document.getElementById("paymentPlanSelect");
+                    const chosenPlanKey = planSelect ? planSelect.value : "standard";
+
+                    const planDetails = {
+                        standard: { title: "ESQUEMA STANDARD: PLAN 30/70", label: "30% Enganche, 70% a la Entrega", disc: 0, initPct: 30, constPct: 0, delivPct: 70 },
+                        preferred: { title: "ESQUEMA PREFERENTE: PLAN 30/40/30", label: "30% Enganche, 40% durante construcción, 30% a la Entrega (4% Desc)", disc: 4, initPct: 30, constPct: 40, delivPct: 30 },
+                        elite: { title: "ESQUEMA ÉLITE: PLAN 50/30/20", label: "50% Enganche, 30% durante construcción, 20% a la Entrega (7% Desc)", disc: 7, initPct: 50, constPct: 30, delivPct: 20 },
+                        premium: { title: "ESQUEMA PREMIUM: PLAN 80/20", label: "80% Enganche, 20% a la Entrega (12% Desc)", disc: 12, initPct: 80, constPct: 0, delivPct: 20 }
+                    };
+
+                    const plan = planDetails[chosenPlanKey] || planDetails.standard;
+                    const discountVal = basePrice * (plan.disc / 100);
+                    const finalPrice = basePrice - discountVal;
+
+                    const initialPayment = finalPrice * (plan.initPct / 100);
+                    const constructionPayment = finalPrice * (plan.constPct / 100);
+                    const deliveryPayment = finalPrice * (plan.delivPct / 100);
+
+                    // Output calculations elegantly
+                    pdf.setFont("sans", "bold");
+                    pdf.setFontSize(11);
+                    pdf.setTextColor(11, 28, 48);
+                    pdf.text(plan.title, 15, 138);
+
+                    pdf.setFont("sans", "normal");
+                    pdf.setFontSize(8.5);
+                    pdf.setTextColor(120, 120, 120);
+                    pdf.text(plan.label, 15, 143);
+
+                    // Final Price Output
+                    pdf.setFont("sans", "bold");
+                    pdf.setFontSize(12);
+                    pdf.setTextColor(197, 168, 128);
+                    pdf.text(`$${finalPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} MXN`, 195, 140, { align: "right" });
+
+                    if (plan.disc > 0) {
+                        pdf.setFont("sans", "normal");
+                        pdf.setFontSize(7.5);
+                        pdf.setTextColor(110, 110, 110);
+                        pdf.text(`Incluye descuento del ${plan.disc}% sobre el precio de lista original ($${basePrice.toLocaleString()} MXN)`, 195, 145, { align: "right" });
+                    }
+
+                    // Structured Breakdown Boxes Y=150 to 180
+                    pdf.setFillColor(248, 250, 252);
+                    pdf.setDrawColor(226, 232, 240);
+                    pdf.rect(15, 152, 180, 28, 'DF');
+
+                    // Grid Columns
+                    pdf.setFont("sans", "normal");
+                    pdf.setFontSize(7.5);
+                    pdf.setTextColor(140, 140, 140);
+                    pdf.text(`ENGANCHE (${plan.initPct}%)`, 22, 160);
+                    pdf.text(`DURANTE CONSTRUCCIÓN (${plan.constPct}%)`, 82, 160);
+                    pdf.text(`PAGO CONTRA ENTREGA (${plan.delivPct}%)`, 142, 160);
+
+                    pdf.setFont("sans", "bold");
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(11, 28, 48);
+                    pdf.text(`$${initialPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} MXN`, 22, 169);
+                    pdf.text(`$${constructionPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} MXN`, 82, 169);
+                    pdf.text(`$${deliveryPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} MXN`, 142, 169);
+
+                    // Delivery date notice bar
+                    pdf.setFillColor(244, 240, 234);
+                    pdf.rect(15, 188, 180, 9, 'F');
+                    pdf.setFont("sans", "bold");
+                    pdf.setFontSize(8);
+                    pdf.setTextColor(179, 147, 106);
+                    pdf.text("FECHA ESTIMADA DE ENTREGA AMBAS TORRES: DICIEMBRE 2028", 105, 194, { align: "center" });
+
+                    // Legal Notes Y=205 onwards
+                    pdf.setFont("sans", "normal");
+                    pdf.setTextColor(140, 140, 140);
+                    pdf.setFontSize(7);
+                    
+                    const noteText = "NOTA IMPORTANTE: La presente cotización es de carácter estrictamente informativo y no representa obligación o compromiso legal de venta por parte del desarrollador. Precios sujetos a cambio sin previo aviso. Los renders y planos de distribución son representaciones artísticas digitales ilustrativas que pueden variar conforme al proyecto ejecutivo final de obra.";
+                    const splitNote = pdf.splitTextToSize(noteText, 180);
+                    pdf.text(splitNote, 15, 204);
+
+                    // Save output cleanly
                     pdf.save(`Nautica_Cotizacion_${item.unit.replace(/\s+/g, '_')}.pdf`);
                     
                     if (btnText) btnText.innerText = "Generar Cotización en PDF";
