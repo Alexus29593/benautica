@@ -1,913 +1,1178 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-950">
+<html lang="es" class="scroll-smooth bg-brand-dark w-full max-w-full overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAUTICA Residences - Luxury Catalog</title>
-    <!-- Tailwind CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Amazing Colors | Elite Ocean Journeys</title>
+    
+    <!-- Favicon Oficial Premium en Alta Resolución (Optimizado para múltiples dispositivos) -->
+    <link class="brand-favicon" rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/lg2.png">
+    <link class="brand-favicon" rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/lg2.png">
+    <link class="brand-favicon" rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/lg2.png">
+    <link class="brand-favicon" rel="icon" type="image/png" sizes="512x512" href="https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/lg2.png">
+    <link class="brand-favicon" rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/lg2.png">
+    
+    <!-- Fuentes Premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS y Iconos de FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Definición Global de Analíticas y Conversión -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function trackConversion(eventName, details) {
+            console.log(`[Analytics Event] ${eventName}`, details);
+            window.dataLayer.push({ event: eventName, ...details });
+        }
+    </script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['"Montserrat"', 'sans-serif'],
-                        serif: ['"Cinzel"', 'serif'],
-                    },
                     colors: {
-                        gold: {
-                            100: '#f4f0ea',
-                            200: '#e1d4c3',
-                            500: '#c5a880',
-                            600: '#b3936a',
-                            700: '#9b7b54',
-                        },
-                        nautica: {
-                            50: '#f4f6f8',
-                            900: '#0b1320',
-                            950: '#060a12',
+                        brand: {
+                            navy: '#0b1a30',      /* Azul Abismo Náutico */
+                            accent: '#bda06a',    /* Oro Cepillado / Champagne */
+                            light: '#2a5a7a',     /* Deep Slate Blue */
+                            pearl: '#f5f3ef',     /* Lino Arena Alabastro */
+                            dark: '#071021'       /* Yacht Midnight Blue */
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        display: ['Cinzel', 'serif'],
+                        serif: ['Playfair Display', 'serif']
                     }
                 }
             }
         }
     </script>
+
     <style>
-        .gold-gradient {
-            background: linear-gradient(135deg, #c5a880 0%, #e1d4c3 50%, #b3936a 100%);
+        :root {
+            --primary-dark: #071021; 
+            --brand-blue: #0b1a30; 
+            --accent: #bda06a;  
+            --light: #2a5a7a;   
+            --white: #ffffff;
+            --pearl-bg: #f5f3ef;   
+            --gradient: linear-gradient(135deg, #bda06a 0%, #dfcba5 100%);
         }
-        .luxury-glass {
-            background: rgba(6, 10, 18, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+
+        /* TRANSICIONES DE SPA CONTROLLER - CINEMATIC SCALE & BLUR */
+        .page-view {
+            display: none !important; 
+            opacity: 0;
+            visibility: hidden;
+            position: absolute !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            transform: scale(0.97) translateY(20px);
+            filter: blur(10px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity, filter;
         }
-        /* Custom premium scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        
+        .page-view.active {
+            display: block !important; 
+            visibility: visible;
+            position: relative !important;
+            height: auto !important;
+            overflow: visible !important;
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
         }
-        ::-webkit-scrollbar-track {
-            background: #060a12;
+
+        /* EFECTO DE LÍNEA DORADA EN ENLACES DEL MENÚ */
+        .nav-btn {
+            position: relative;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #c5a880;
-            border-radius: 4px;
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            width: 0;
+            height: 1.5px;
+            background: #bda06a;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #b3936a;
+        .nav-btn:hover::after, .nav-btn.active::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* ANIMACIÓN DEL CARRUSEL INFINITO */
+        @keyframes infinite-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-infinite-scroll {
+            animation: infinite-scroll 45s linear infinite;
+            width: max-content;
+        }
+        .carousel-hover-pause:hover .animate-infinite-scroll {
+            animation-play-state: paused;
+        }
+
+        /* EFECTOS DE REVELADO AL DESPLAZARSE */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* EFECTO CORTINA ULTRA SUAVE */
+        .reveal-curtain {
+            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+            transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-curtain.active {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .no-scroll { overflow: hidden; }
+
+        /* Media query para manejar el menú desplegable en pantallas grandes */
+        @media (min-width: 1024px) {
+            .group:hover .dropdown-menu {
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* DESTELLOS AMBIENTALES DE FONDO (Efecto Neblina de Oro) */
+        .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(189,160,106,0.05) 0%, rgba(7,16,33,0) 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(80px);
         }
     </style>
 </head>
-<body class="h-full font-sans text-slate-200 flex flex-col antialiased bg-nautica-950">
+<body class="antialiased overflow-x-hidden w-full max-w-full selection:bg-brand-accent selection:text-white bg-brand-dark">
 
-    <!-- Luxury Navigation Bar -->
-    <nav class="sticky top-0 z-40 w-full border-b border-gold-500/20 luxury-glass transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-24">
-                <div class="flex items-center space-x-4">
-                    <div class="p-2 border border-gold-500/30 rounded-full">
-                        <i data-lucide="compass" class="w-7 h-7 text-gold-500 animate-spin-slow"></i>
-                    </div>
-                    <div>
-                        <span class="text-2xl font-serif font-bold tracking-[0.2em] text-white block">NAUTICA</span>
-                        <span class="text-[9px] tracking-[0.4em] font-light text-gold-500 uppercase block -mt-1">Residences by Nauma</span>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <!-- Google Sheet Sync Badge -->
-                    <div id="syncStatus" class="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gold-500/10 text-gold-500 border border-gold-500/30">
-                        <span class="relative flex h-1.5 w-1.5">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-500 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-gold-500"></span>
-                        </span>
-                        <span>Sincronizado</span>
-                    </div>
-                    <!-- Manual Sync Button -->
-                    <button id="syncBtn" onclick="fetchInventoryData()" class="flex items-center space-x-2 px-4 py-2 border border-gold-500/30 hover:border-gold-500 hover:bg-gold-500/10 rounded-full text-xs font-bold uppercase tracking-widest transition-all text-gold-500 active:scale-95">
-                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                        <span class="hidden md:inline">Actualizar</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Elegant Hero Banner Section -->
-    <header class="relative bg-nautica-900 border-b border-gold-500/10 py-16 px-4 sm:px-6 lg:px-8 overflow-hidden text-center">
-        <!-- Abstract sea architectural wireframe pattern background -->
-        <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#c5a880_1px,transparent_1px)] [background-size:24px_24px]"></div>
-        <div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full filter blur-3xl"></div>
-        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-gold-500/10 rounded-full filter blur-3xl"></div>
-
-        <div class="max-w-5xl mx-auto relative z-10 space-y-4">
-            <span class="text-xs font-bold tracking-[0.4em] text-gold-500 uppercase block">Portafolio Residencial de Lujo</span>
-            <h1 class="text-4xl sm:text-5xl font-serif font-light tracking-[0.1em] text-white">
-                INVENTARIO EXCLUSIVO
-            </h1>
-            <div class="w-24 h-[1px] gold-gradient mx-auto my-4"></div>
-            <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
-                Explore y administre la disponibilidad de las <span class="text-white font-semibold">380 residencias</span> de Torre A y Torre B con orientación al Mar y la Laguna en tiempo real.
-            </p>
-
-            <!-- Quick Metrics Header Panels -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8">
-                <div class="bg-nautica-950/60 border border-gold-500/10 rounded-2xl p-5">
-                    <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Unidades Totales</span>
-                    <span id="statTotal" class="text-3xl font-light font-serif text-white">380</span>
-                </div>
-                <div class="bg-nautica-950/60 border border-gold-500/10 rounded-2xl p-5">
-                    <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Disponibles (Blanco)</span>
-                    <span id="statAvailable" class="text-3xl font-light font-serif text-white">0</span>
-                </div>
-                <div class="bg-nautica-950/60 border border-gold-500/10 rounded-2xl p-5">
-                    <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Reservadas (Amarillo)</span>
-                    <span id="statReserved" class="text-3xl font-light font-serif text-gold-500">0</span>
-                </div>
-                <div class="bg-nautica-950/60 border border-gold-500/10 rounded-2xl p-5">
-                    <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-1">Vendidas (Rojo)</span>
-                    <span id="statSold" class="text-3xl font-light font-serif text-rose-500">0</span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Dynamic Application Container -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col gap-10">
+    <!-- ========================================== -->
+    <!-- INTERFAZ PRINCIPAL DEL SITIO (SPA CATÁLOGO) -->
+    <!-- ========================================== -->
+    <div id="main-site-wrapper" class="bg-brand-dark min-h-screen flex flex-col justify-between opacity-100 relative w-full max-w-full overflow-hidden">
         
-        <!-- Premium Controls Panel -->
-        <section class="bg-nautica-900/60 border border-gold-500/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
-            <div class="flex items-center justify-between border-b border-gold-500/10 pb-4">
-                <div class="flex items-center space-x-3">
-                    <i data-lucide="sliders-horizontal" class="w-5 h-5 text-gold-500"></i>
-                    <h2 class="text-sm font-serif font-bold tracking-[0.2em] text-white uppercase">Parámetros de Navegación</h2>
-                </div>
-                <button onclick="resetFilters()" class="text-[10px] font-bold tracking-widest text-gold-500 hover:text-white uppercase transition-colors">
-                    Limpiar Filtros
-                </button>
-            </div>
+        <!-- Contenedor Acotado para Destellos Ambientales (Previene desbordamiento horizontal) -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <div class="ambient-glow top-20 left-[-100px]"></div>
+            <div class="ambient-glow top-[40%] right-[-100px]"></div>
+        </div>
 
-            <!-- Yacht Dashboard Filters Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Dropdown: Torre -->
-                <div class="flex flex-col gap-1.5">
-                    <label for="filterTorre" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Torre</label>
-                    <div class="relative">
-                        <select id="filterTorre" onchange="applyFilters()" class="w-full bg-nautica-950/80 hover:bg-nautica-950 border border-gold-500/20 text-slate-200 rounded-xl px-4 py-3 text-xs tracking-wider uppercase focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
-                            <option value="all">Todas las Torres</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gold-500">
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="relative z-10 w-full max-w-full">
+            <!-- Cabecera de Marca (Redirige suavemente al Inicio) -->
+            <header class="site-brand-header flex flex-col items-center justify-center pt-6 pb-4 px-4 cursor-pointer text-center w-full max-w-full" onclick="navigateTo('home')">
+                <img src="https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/lg2.png" alt="Logo Amazing Colors" class="h-36 sm:h-48 md:h-56 w-auto mb-2 object-contain object-center transition-all duration-500 hover:scale-105" onerror="handleImgError(this, 'general')">
+                <span class="font-display text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-[0.1em] sm:tracking-[0.2em] text-white hover:text-brand-accent transition-all duration-300 uppercase text-center block w-full px-2 break-words">Amazing Colors</span>
+                <p class="text-[9px] md:text-xs font-semibold uppercase tracking-[0.3em] sm:tracking-[0.4em] text-brand-accent/80 mt-2 text-center w-full px-2 block break-words">Elite Ocean Journeys</p>
+            </header>
 
-                <!-- Dropdown: Recámara -->
-                <div class="flex flex-col gap-1.5">
-                    <label for="filterRecamaras" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Recámaras</label>
-                    <div class="relative">
-                        <select id="filterRecamaras" onchange="applyFilters()" class="w-full bg-nautica-950/80 hover:bg-nautica-950 border border-gold-500/20 text-slate-200 rounded-xl px-4 py-3 text-xs tracking-wider uppercase focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
-                            <option value="all">Todas las Recámaras</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gold-500">
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dropdown: Vistas -->
-                <div class="flex flex-col gap-1.5">
-                    <label for="filterVistas" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Vistas</label>
-                    <div class="relative">
-                        <select id="filterVistas" onchange="applyFilters()" class="w-full bg-nautica-950/80 hover:bg-nautica-950 border border-gold-500/20 text-slate-200 rounded-xl px-4 py-3 text-xs tracking-wider uppercase focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
-                            <option value="all">Todas las Vistas</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gold-500">
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dropdown: Disponibilidad -->
-                <div class="flex flex-col gap-1.5">
-                    <label for="filterDisponibilidad" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Disponibilidad</label>
-                    <div class="relative">
-                        <select id="filterDisponibilidad" onchange="applyFilters()" class="w-full bg-nautica-950/80 hover:bg-nautica-950 border border-gold-500/20 text-slate-200 rounded-xl px-4 py-3 text-xs tracking-wider uppercase focus:outline-none focus:ring-1 focus:ring-gold-500 transition-all cursor-pointer appearance-none">
-                            <option value="all">Todas las Unidades</option>
-                            <option value="available">Disponible (Blanco)</option>
-                            <option value="reserved">Reservada (Amarillo)</option>
-                            <option value="sold">Vendida (Rojo)</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gold-500">
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Extended Filtering Options: Search and Sorter -->
-            <div class="flex flex-col md:flex-row items-center gap-4 border-t border-gold-500/10 pt-5">
-                <div class="w-full md:w-2/3 relative">
-                    <i data-lucide="search" class="w-4 h-4 text-gold-500 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                    <input id="searchBar" type="text" oninput="applyFilters()" placeholder="Buscar por número de unidad, modelo, tipología..." class="w-full bg-nautica-950/50 border border-gold-500/10 focus:border-gold-500 focus:bg-nautica-950 rounded-xl pl-11 pr-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none transition-all">
-                </div>
+            <!-- Barra de Navegación Premium -->
+            <nav class="nav-bar sticky top-0 z-50 bg-brand-dark/95 backdrop-blur-md py-5 border-b border-white/10 flex justify-center items-center gap-4 md:gap-8 flex-wrap px-4 w-full max-w-full">
+                <button id="btn-nav-home" class="nav-btn text-white/70 hover:text-white font-semibold text-xs md:text-sm tracking-widest uppercase transition-all duration-300 active" onclick="navigateTo('home')">Inicio</button>
+                <button id="btn-nav-legacy" class="nav-btn text-white/70 hover:text-white font-semibold text-xs md:text-sm tracking-widest uppercase transition-all duration-300" onclick="navigateTo('legacy')">Legado</button>
                 
-                <div class="w-full md:w-1/3 flex items-center justify-between border border-gold-500/10 bg-nautica-950/50 rounded-xl px-4 py-3">
-                    <div class="flex items-center space-x-2">
-                        <i data-lucide="arrow-up-down" class="w-4 h-4 text-gold-500"></i>
-                        <span class="text-xs text-slate-400">Ordenar por Precio</span>
-                    </div>
-                    <select id="sortOrder" onchange="applyFilters()" class="bg-transparent text-xs font-bold text-gold-500 focus:outline-none cursor-pointer">
-                        <option value="default">Relevancia</option>
-                        <option value="asc">Menor a Mayor</option>
-                        <option value="desc">Mayor a Menor</option>
-                    </select>
-                </div>
-            </div>
-        </section>
-
-        <!-- Catalog Gallery Grid -->
-        <section class="space-y-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i data-lucide="grid" class="w-5 h-5 text-gold-500"></i>
-                    <h3 class="text-lg font-serif font-light tracking-[0.1em] text-white uppercase">Residencias Filtradas</h3>
-                    <span id="filteredCount" class="bg-gold-500/10 text-gold-500 border border-gold-500/20 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">0 unidades</span>
-                </div>
-            </div>
-
-            <!-- Loader -->
-            <div id="loader" class="flex flex-col items-center justify-center py-24 gap-4">
-                <div class="w-10 h-10 border-2 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
-                <p class="text-xs tracking-[0.2em] uppercase text-gold-500/60 animate-pulse">Obteniendo coordenadas de inventario...</p>
-            </div>
-
-            <!-- Empty State -->
-            <div id="emptyState" class="hidden flex-col items-center justify-center py-20 px-4 text-center bg-nautica-900/40 border border-gold-500/10 rounded-3xl">
-                <div class="p-4 bg-nautica-950 rounded-full text-gold-500/30 border border-gold-500/10 mb-4">
-                    <i data-lucide="help-circle" class="w-10 h-10"></i>
-                </div>
-                <h4 class="text-lg font-serif tracking-wide text-white">Ninguna unidad coincide con los filtros establecidos</h4>
-                <p class="text-xs text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed">Pruebe ajustando los parámetros de Torre, recámaras o limpie el buscador.</p>
-                <button onclick="resetFilters()" class="mt-6 px-6 py-2.5 bg-gold-500 hover:bg-gold-600 text-nautica-950 text-xs font-bold tracking-widest uppercase rounded-full transition-all active:scale-95">
-                    Restaurar Búsqueda
-                </button>
-            </div>
-
-            <!-- Interactive Grid Container -->
-            <div id="unitGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Cards will render here -->
-            </div>
-        </section>
-    </main>
-
-    <!-- Interactive Unit Details Modal -->
-    <div id="unitModal" class="fixed inset-0 z-50 overflow-y-auto hidden" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-nautica-950/90 backdrop-blur-md transition-opacity" onclick="closeModal()"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-
-            <!-- Modal Content Block -->
-            <div class="inline-block align-bottom bg-nautica-900 border border-gold-500/20 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <!-- Luxury Image Header -->
-                <div id="modalHeaderBg" class="h-48 bg-gradient-to-r from-nautica-900 to-nautica-950 p-6 flex flex-col justify-end relative border-b border-gold-500/15">
-                    <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#c5a880_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                    <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-nautica-950/80 hover:bg-gold-500 hover:text-nautica-950 text-gold-500 rounded-full transition-all border border-gold-500/20">
-                        <i data-lucide="x" class="w-4 h-4"></i>
+                <!-- Catálogo con Subcategorías -->
+                <div class="relative group" id="catalog-dropdown-container">
+                    <button id="btn-nav-catalog" class="nav-btn text-white/70 hover:text-white font-semibold text-xs md:text-sm tracking-widest uppercase transition-all duration-300 flex items-center gap-1.5 focus:outline-none" onclick="toggleCatalogDropdown(event)">
+                        Catálogo <i class="fas fa-chevron-down text-[10px] transition-transform duration-300 group-hover:rotate-180"></i>
                     </button>
-                    <!-- Badges -->
-                    <div class="flex items-center space-x-2 mb-2 relative z-10">
-                        <span id="modalTorreBadge" class="bg-gold-500/20 border border-gold-500/30 text-gold-500 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Torre A</span>
-                        <span id="modalDispoBadge" class="text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Disponible</span>
+                    <div id="catalog-dropdown-menu" class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-brand-dark/95 backdrop-blur-md border border-white/10 opacity-0 invisible transition-all duration-300 z-50 shadow-2xl rounded-lg py-2 dropdown-menu">
+                        <button onclick="selectCatalogSubCategory('tour', event)" class="w-full text-left px-5 py-2.5 text-xs text-white hover:text-brand-accent hover:bg-white/5 transition-colors tracking-widest uppercase font-bold">Tours</button>
+                        <button onclick="selectCatalogSubCategory('yate', event)" class="w-full text-left px-5 py-2.5 text-xs text-white hover:text-brand-accent hover:bg-white/5 transition-colors tracking-widest uppercase font-bold">Yates</button>
+                        <button onclick="selectCatalogSubCategory('transportacion', event)" class="w-full text-left px-5 py-2.5 text-xs text-white hover:text-brand-accent hover:bg-white/5 transition-colors tracking-widest uppercase font-bold">Transportación</button>
                     </div>
-                    <h4 id="modalUnitTitle" class="text-3xl font-serif font-light text-white relative z-10">Unidad 402</h4>
                 </div>
 
-                <!-- Specs -->
-                <div class="p-6 sm:p-8 space-y-6">
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="p-3 bg-nautica-950/60 border border-gold-500/5 rounded-2xl text-center">
-                            <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-0.5">Recámaras</span>
-                            <span id="modalRecamaras" class="text-sm font-bold text-white">3 R</span>
+                <button id="btn-nav-contact" class="nav-btn text-white/70 hover:text-white font-semibold text-xs md:text-sm tracking-widest uppercase transition-all duration-300" onclick="navigateTo('contact')">Reserva</button>
+            </nav>
+
+            <!-- ========================================== -->
+            <!-- SECCIÓN 1: INICIO                          -->
+            <!-- ========================================== -->
+            <section id="page-home" class="page-view active bg-brand-dark w-full max-w-full">
+                <div class="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                        <div class="reveal-up lg:pr-8">
+                            <span class="text-brand-accent tracking-widest text-xs font-bold uppercase mb-4 block">El Caribe Maya a tu manera</span>
+                            <h2 class="font-display text-4xl lg:text-5xl text-white font-light leading-tight mb-8">
+                                Cancún no es solo un destino, <br>es un <span class="font-serif italic font-bold text-brand-accent">estado de plenitud.</span>
+                            </h2>
+                            <div class="w-12 h-[2px] bg-brand-accent mb-8"></div>
+                            <p class="text-slate-300 font-light text-lg leading-relaxed mb-6">
+                                La joya de Quintana Roo. Un lugar donde la selva de esmeraldas se funde con el mar turquesa y el tiempo parece detenerse para regalarte momentos inigualables. Cancún te ofrece el contraste perfecto de la civilización maya y la hospitalidad premium contemporánea.
+                            </p>
+                            <p class="text-white font-semibold text-lg italic border-l-2 border-brand-accent pl-4">
+                                "Siente la brisa caribeña sin límites. Te revelamos el verdadero color del paraíso."
+                            </p>
                         </div>
-                        <div class="p-3 bg-nautica-950/60 border border-gold-500/5 rounded-2xl text-center">
-                            <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-0.5">Metros²</span>
-                            <span id="modalM2" class="text-sm font-bold text-white">145 m²</span>
-                        </div>
-                        <div class="p-3 bg-nautica-950/60 border border-gold-500/5 rounded-2xl text-center">
-                            <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-wider mb-0.5">Tipología</span>
-                            <span id="modalTipo" class="text-sm font-bold text-white">3 R</span>
+                        <!-- Imagen representativa de Cancún (cun.png del repositorio raíz absoluto) -->
+                        <div class="relative h-[45vh] lg:h-[60vh] w-full reveal-curtain shadow-2xl rounded-2xl overflow-hidden bg-brand-dark">
+                            <img id="inicio-playas-img" src="https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/cun.png" alt="Playas de Cancún" class="w-full h-full object-cover object-center transition-transform duration-1000 hover:scale-105" onerror="handleImgError(this, 'playas')">
                         </div>
                     </div>
+                </div>
 
-                    <!-- Additional Details -->
-                    <div class="border-t border-b border-gold-500/10 py-4 space-y-3">
-                        <div class="flex justify-between text-xs">
-                            <span class="text-slate-400 uppercase tracking-widest">Modelo</span>
-                            <span id="modalModelo" class="font-bold text-white tracking-widest">L2</span>
+                <!-- Datos Curiosos de Quintana Roo -->
+                <div class="bg-brand-dark text-white py-20 lg:py-28 border-t border-white/10 w-full max-w-full">
+                    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                        <div class="text-center mb-16 lg:mb-20 reveal-up">
+                            <span class="text-brand-accent uppercase tracking-[0.2em] text-xs font-bold mb-4 block">Datos Curiosos</span>
+                            <h2 class="font-display text-3xl md:text-5xl text-white font-light">Misterios de <span class="font-serif italic font-bold text-brand-accent">Quintana Roo</span></h2>
                         </div>
-                        <div class="flex justify-between text-xs">
-                            <span class="text-slate-400 uppercase tracking-widest">Vista de la Unidad</span>
-                            <span id="modalVista" class="font-bold text-white">Interior</span>
-                        </div>
-                        <div class="flex justify-between text-xs">
-                            <span class="text-slate-400 uppercase tracking-widest">Orientación</span>
-                            <span id="modalOrientacion" class="font-bold text-white">Sur</span>
-                        </div>
-                        <div class="flex justify-between items-center pt-3 border-t border-gold-500/5">
-                            <span class="text-xs text-gold-500 uppercase tracking-widest font-semibold">Precio de Lista</span>
-                            <span id="modalPrecio" class="text-2xl font-serif text-white tracking-wide">$11,390,000 MXN</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+                            <div class="border border-white/10 p-8 lg:p-10 rounded-2xl bg-brand-navy hover:-translate-y-2 transition-transform duration-300 shadow-xl reveal-up flex flex-col justify-between">
+                                <div>
+                                    <i class="fas fa-sun text-brand-accent text-3xl mb-6"></i>
+                                    <h3 class="font-display text-xl text-white font-semibold mb-4">Arena que no quema</h3>
+                                    <p class="text-slate-300 font-light text-sm leading-relaxed">Nuestra brillante arena blanca está hecha de coral triturado. No absorbe la energía solar, permitiendo caminar descalzo cómodamente a mediodía.</p>
+                                </div>
+                            </div>
+                            <div class="border border-white/10 p-8 lg:p-10 rounded-2xl bg-brand-navy hover:-translate-y-2 transition-transform duration-300 shadow-xl reveal-up flex flex-col justify-between">
+                                <div>
+                                    <i class="fas fa-water text-brand-accent text-3xl mb-6"></i>
+                                    <h3 class="font-display text-xl text-white font-semibold mb-4">El Arrecife Mesoamericano</h3>
+                                    <p class="text-slate-300 font-light text-sm leading-relaxed">Frente a las costas descansa la segunda barra de coral más grande del mundo. Un santuario de biodiversidad ideal para explorar de forma privada.</p>
+                                </div>
+                            </div>
+                            <div class="border border-white/10 p-8 lg:p-10 rounded-2xl bg-brand-navy hover:-translate-y-2 transition-transform duration-300 shadow-xl reveal-up flex flex-col justify-between">
+                                <div>
+                                    <i class="fas fa-dharmachakra text-brand-accent text-3xl mb-6"></i>
+                                    <h3 class="font-display text-xl text-white font-semibold mb-4">Portales al Inframundo</h3>
+                                    <p class="text-slate-300 font-light text-sm leading-relaxed">Quintana Roo alberga los ríos subterráneos y cuevas inundadas (cenotes) más extensos del planeta. Portales sagrados de aguas cristalinas.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Architectural Blueprint layout -->
+                <!-- Lema y Carrusel de Inicio -->
+                <div class="pt-24 pb-4 lg:pt-28 lg:pb-6 overflow-hidden border-t border-white/10 w-full max-w-full">
+                    <div class="text-center px-6 max-w-5xl mx-auto reveal-up mb-16">
+                        <i class="fas fa-anchor text-brand-accent text-3xl mb-8"></i>
+                        <h2 class="font-display text-3xl md:text-5xl lg:text-6xl text-white font-light leading-tight mb-6">
+                            Donde el paraíso toma su <br>
+                            <span class="font-serif italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-white">verdadero color.</span>
+                        </h2>
+                        <div class="w-20 h-[1.5px] bg-brand-accent mx-auto my-8"></div>
+                        <p class="text-slate-400 font-medium text-xs md:text-sm tracking-[0.3em] uppercase">El lujo de la libertad absoluta</p>
+                    </div>
+
+                    <!-- Contenedor del Carrusel dinámico -->
+                    <div id="home-carousel-container" class="relative w-full pb-4 overflow-hidden carousel-hover-pause" style="clip-path: inset(0); contain: paint;">
+                        <div class="absolute inset-y-0 left-0 w-16 md:w-40 bg-gradient-to-r from-brand-dark to-transparent z-10 pointer-events-none"></div>
+                        <div class="absolute inset-y-0 right-0 w-16 md:w-40 bg-gradient-to-l from-brand-dark to-transparent z-10 pointer-events-none"></div>
+                        
+                        <div id="home-carousel-scroll" class="flex animate-infinite-scroll">
+                            <!-- Se puebla de forma dinámica -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- SECCIÓN 2: LEGADO                          -->
+            <!-- ========================================== -->
+            <section id="page-legacy" class="page-view bg-brand-dark w-full max-w-full">
+                <div class="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                        <div class="reveal-up lg:pr-8">
+                            <span class="text-brand-accent tracking-widest text-xs font-bold uppercase mb-4 block">Nuestra Historia</span>
+                            <h2 class="font-display text-4xl lg:text-5xl text-white font-light leading-tight mb-8">
+                                Nacimos en <span class="font-serif italic font-bold text-brand-accent">2021</span> para redefinir el lujo del viaje privado.
+                            </h2>
+                            <div class="w-12 h-[2px] bg-brand-accent mb-8"></div>
+                            <p class="text-slate-300 font-light text-lg leading-relaxed mb-6">
+                                Mientras el mundo entero experimentaba profundos cambios, nosotros decidimos mirar hacia el horizonte del Caribe Mexicano y crear una propuesta diferente. Nos propusimos diseñar experiencias completamente libres de filas, personalizadas al detalle y enfocadas en revelar la verdadera esencia y pureza de Cancún y la Riviera Maya.
+                            </p>
+                            <p class="text-white font-semibold text-xl leading-relaxed">
+                                Llevamos 5 años entregándote el color real del paraíso sin prisas ni multitudes.
+                            </p>
+                        </div>
+                        <div class="relative h-[45vh] lg:h-[65vh] w-full reveal-curtain shadow-2xl rounded-2xl overflow-hidden bg-brand-dark">
+                            <!-- Imagen CCT.jpg del repositorio absoluto para soporte de Chrome -->
+                            <img id="legado-yate-img" src="https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/CCT.jpg" alt="Chichén Itzá" class="w-full h-full object-cover object-center transition-transform duration-[2s] hover:scale-105" onerror="handleImgError(this, 'arqueologia')">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- SECCIÓN 3: CATÁLOGO                        -->
+            <!-- ========================================== -->
+            <section id="page-catalog" class="page-view bg-brand-dark w-full max-w-full">
+                <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-16">
+                    <div class="text-center mb-12 lg:mb-16 reveal-up">
+                        <span id="catalog-category-badge" class="text-brand-accent uppercase tracking-[0.2em] text-xs font-bold mb-4 block">Experiencias Exclusivas</span>
+                        <h2 id="catalog-category-title" class="font-display text-3xl md:text-5xl text-white font-light">Colección de <span class="font-serif italic font-bold">Aventuras</span></h2>
+                        <p id="catalog-category-desc" class="text-slate-300 font-light text-sm md:text-base max-w-2xl mx-auto mt-4">Un catálogo meticulosamente seleccionado para aquellos que buscan conectar con la belleza real del Caribe.</p>
+                    </div>
+
+                    <!-- Navegación Interna del Catálogo -->
+                    <div class="flex justify-center gap-4 mb-16 border-b border-white/10 pb-6 flex-wrap w-full max-w-full">
+                        <button id="sub-nav-tour" class="px-6 py-2.5 text-[10px] md:text-xs font-bold tracking-widest uppercase rounded-full transition-all duration-300 border border-white/10 text-white hover:border-brand-accent focus:outline-none animate-transition" onclick="filterCatalog('tour')">Tours</button>
+                        <button id="sub-nav-yate" class="px-6 py-2.5 text-[10px] md:text-xs font-bold tracking-widest uppercase rounded-full transition-all duration-300 border border-white/10 text-white hover:border-brand-accent focus:outline-none animate-transition" onclick="filterCatalog('yate')">Yates</button>
+                        <button id="sub-nav-transportacion" class="px-6 py-2.5 text-[10px] md:text-xs font-bold tracking-widest uppercase rounded-full transition-all duration-300 border border-white/10 text-white hover:border-brand-accent focus:outline-none animate-transition" onclick="filterCatalog('transportacion')">Transportación</button>
+                    </div>
+
+                    <!-- Cuadrícula Dinámica del Catálogo -->
+                    <div id="catalog-grid" class="flex flex-wrap justify-center gap-8 lg:gap-10 w-full max-w-full">
+                        <!-- Se puebla de forma dinámica -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- SECCIÓN 4: RESERVA                         -->
+            <!-- ========================================== -->
+            <section id="page-contact" class="page-view bg-brand-dark w-full max-w-full">
+                <div class="max-w-4xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
+                    <div class="text-center mb-12 lg:mb-16 reveal-up">
+                        <span class="text-brand-accent uppercase tracking-[0.2em] text-xs font-bold mb-4 block">Planificación Personalizada</span>
+                        <h2 class="font-display text-3xl md:text-5xl text-white font-light">Diseña tu <span class="font-serif italic font-bold">Estancia</span></h2>
+                        <p class="text-slate-300 font-light text-base mt-4 max-w-lg mx-auto">Envíanos tus deseos de viaje y un concierge especializado creará tu itinerario ideal.</p>
+                    </div>
+
+                    <div class="bg-brand-navy p-8 md:p-12 shadow-2xl rounded-2xl reveal-up border border-white/10 max-w-3xl mx-auto w-full">
+                        <form id="bookingFunnel" class="space-y-8" onsubmit="handleFormSubmit(event)">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+                                <div class="relative">
+                                    <input type="text" id="f_name" required class="w-full bg-transparent border-b border-white/20 text-white py-3 focus:outline-none focus:border-brand-accent transition-colors peer placeholder-transparent" placeholder="Tu Nombre">
+                                    <label for="f_name" class="absolute left-0 -top-3.5 text-xs text-brand-accent uppercase tracking-widest font-semibold transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-placeholder-shown:top-3.5 peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-brand-accent">Tu Nombre *</label>
+                                </div>
+                                <div class="relative">
+                                    <select id="f_people" required class="w-full bg-transparent border-b border-white/20 text-white py-3 focus:outline-none focus:border-brand-accent transition-colors appearance-none cursor-pointer">
+                                        <option value="" disabled selected class="text-slate-400">¿Cuántos viajan? *</option>
+                                        <option value="Pareja" class="text-brand-dark">Pareja (2 personas)</option>
+                                        <option value="Familia Pequeña (3-5)" class="text-brand-dark">Familia pequeña (3 a 5)</option>
+                                        <option value="Grupo Familiar (6-10)" class="text-brand-dark">Grupo familiar (6 a 10)</option>
+                                        <option value="Gran Evento (10+)" class="text-brand-dark">Delegación / Grupo Grande (10+)</option>
+                                    </select>
+                                </div>
+                                <div class="relative md:col-span-2">
+                                    <input type="text" id="f_destinos" class="w-full bg-transparent border-b border-white/20 text-white py-3 focus:outline-none focus:border-brand-accent transition-colors peer placeholder-transparent" placeholder="Actividades de Interés">
+                                    <label for="f_destinos" class="absolute left-0 -top-3.5 text-xs text-brand-accent uppercase tracking-widest font-semibold transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:text-slate-400 peer-placeholder-shown:top-3.5 peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-brand-accent">Actividades de Interés</label>
+                                </div>
+                            </div>
+
+                            <div class="pt-6 text-center">
+                                <button type="submit" class="border border-brand-accent hover:bg-brand-accent text-white py-3.5 px-8 font-medium tracking-[0.2em] text-[11px] uppercase transition-all duration-300 rounded-full w-full md:w-auto flex items-center justify-center mx-auto gap-2 focus:outline-none hover:shadow-[0_10px_25px_rgba(189,160,106,0.3)]">
+                                    Enviar Solicitud a WhatsApp <i class="fab fa-whatsapp text-sm"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL DE DETALLE E INFORMACIÓN DE RESERVA   -->
+        <!-- ========================================== -->
+        <div id="activity-detail-modal" class="fixed inset-0 bg-brand-dark/95 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 overflow-y-auto p-4 md:p-6" onclick="closeDetailModal()">
+            <div class="bg-brand-navy border border-white/10 rounded-2xl w-full max-w-4xl relative overflow-hidden shadow-2xl flex flex-col md:flex-row my-auto" onclick="event.stopPropagation()">
+                <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-white hover:text-brand-accent transition-colors z-50 text-2xl focus:outline-none p-2 bg-brand-dark/80 rounded-full h-10 w-10 flex items-center justify-center">
+                    <i class="fas fa-times"></i>
+                </button>
+                
+                <!-- Columna Izquierda: Imagen (Click para zoom) -->
+                <div class="md:w-1/2 relative min-h-[300px] md:min-h-[500px] overflow-hidden bg-brand-dark cursor-zoom-in" id="detail-img-container">
+                    <img id="detail-modal-img" src="" alt="Detalle Actividad" class="w-full h-full object-cover object-center absolute inset-0 transition-transform duration-500 hover:scale-105">
+                    <div class="absolute bottom-4 left-4 bg-brand-dark/80 px-4 py-2 rounded-full text-xs text-brand-accent flex items-center gap-2 pointer-events-none">
+                        <i class="fas fa-search-plus"></i> Clic para ampliar imagen
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Información, Specs y Reserva -->
+                <div class="md:w-1/2 p-8 md:p-10 flex flex-col justify-between max-h-[85vh] overflow-y-auto">
                     <div>
-                        <span class="text-[10px] font-bold text-slate-400 block mb-2 uppercase tracking-wider">Planos de Distribución</span>
-                        <div id="modalLayoutRender" class="border border-gold-500/10 rounded-2xl bg-nautica-950/40 p-4 flex items-center justify-center min-h-[160px]">
-                            <!-- SVG Blueprint rendered here -->
+                        <span id="detail-modal-pax" class="text-brand-accent text-xs font-bold uppercase tracking-widest block mb-2">Amazing Colors</span>
+                        <h3 id="detail-modal-title" class="font-display text-2xl md:text-3xl text-white font-bold mb-4">Amapola</h3>
+                        <p id="detail-modal-price" class="text-brand-accent font-semibold text-lg mb-6">$1,200 USD</p>
+                        
+                        <!-- Descripción -->
+                        <div class="mb-6">
+                            <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2 pb-1 border-b border-white/10">Descripción</h4>
+                            <p id="detail-modal-desc" class="text-slate-300 font-light text-sm leading-relaxed">
+                                Olvídate de las multitudes y diseña tu propio día...
+                            </p>
+                        </div>
+
+                        <!-- Qué incluye -->
+                        <div class="mb-6" id="detail-modal-includes-section">
+                            <h4 class="text-white font-bold text-xs uppercase tracking-widest mb-2 pb-1 border-b border-white/10">¿Qué incluye?</h4>
+                            <p id="detail-modal-includes" class="text-slate-300 font-light text-sm leading-relaxed">
+                                Bebidas, snorkel, capitán...
+                            </p>
+                        </div>
+
+                        <!-- Ficha Técnica Dinámica -->
+                        <div id="detail-modal-specs" class="space-y-2 mt-4">
+                            <!-- Metadatos dinámicos -->
                         </div>
                     </div>
 
-                    <!-- Actions -->
-                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
-                        <a id="contactAgentBtn" target="_blank" class="flex-grow flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-4 rounded-xl font-bold transition-all shadow-md active:scale-95 cursor-pointer">
-                            <i data-lucide="message-square-text" class="w-5 h-5"></i>
-                            <span class="text-xs uppercase tracking-widest">Solicitar Información por WhatsApp</span>
-                        </a>
-                        <button onclick="closeModal()" class="px-5 py-4 border border-gold-500/30 hover:bg-gold-500/10 text-gold-500 rounded-xl font-bold transition-all text-xs uppercase tracking-widest active:scale-95">
-                            Cerrar
+                    <!-- Botón de conversión directa -->
+                    <div class="pt-8 mt-8 border-t border-white/10">
+                        <button id="detail-modal-reserve-btn" class="bg-brand-accent text-white px-6 py-4 font-bold tracking-wider uppercase hover:bg-white hover:text-brand-navy transition-all duration-300 w-full flex items-center justify-center rounded-full shadow-[0_10px_25px_rgba(189,160,106,0.3)]">
+                            Reservar por WhatsApp <i class="fab fa-whatsapp ml-3 text-lg"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL PARA ZOOM Y LIGHTBOX                 -->
+        <!-- ========================================== -->
+        <div id="image-zoom-modal" class="fixed inset-0 bg-brand-dark/98 z-[60] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeZoomModal()">
+            <button onclick="closeZoomModal()" class="absolute top-6 right-6 text-white text-4xl hover:text-brand-accent transition-colors z-50 focus:outline-none p-4">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="relative max-w-5xl max-h-[80vh] overflow-hidden cursor-zoom-out p-2" id="zoom-container" onclick="event.stopPropagation()" onmousemove="zoomImage(event)" onmouseleave="resetZoomImage()">
+                <img id="zoom-modal-img" src="" alt="Detalle Premium" class="max-w-full max-h-[75vh] object-contain object-center transition-transform duration-100 ease-out origin-center select-none pointer-events-none rounded-xl shadow-2xl">
+            </div>
+            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-white/50 text-xs tracking-widest uppercase pointer-events-none text-center px-4">
+                Desplaza el ratón sobre la imagen para explorar cada detalle con la lupa táctil
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- PREMIUM FOOTER                             -->
+        <!-- ========================================== -->
+        <footer class="bg-[#071021] border-t border-white/10 pt-16 pb-10 mt-6 text-white relative z-40 w-full max-w-full">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
+                    
+                    <div class="lg:col-span-1">
+                        <button onclick="navigateTo('home')" class="mb-6 block text-left hover:opacity-80 transition-opacity focus:outline-none">
+                            <span class="font-display font-black text-2xl tracking-tighter text-white">AMAZING<span class="text-brand-accent">COLORS</span></span>
+                        </button>
+                        <p class="text-slate-400 font-light text-sm leading-relaxed max-w-sm mb-6">
+                            Redefiniendo los itinerarios boutique por el Caribe Mexicano. Aventuras auténticas y personalizadas de alta gama.
+                        </p>
+                        <div class="flex space-x-6">
+                            <a href="https://www.instagram.com/amazingcolorstours/" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-brand-accent transition-colors duration-300"><i class="fab fa-instagram text-xl"></i></a>
+                            <a href="https://www.facebook.com/p/Amazing-Colors-Tours-100088379184523/" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-brand-accent transition-colors duration-300"><i class="fab fa-facebook-f text-xl"></i></a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-brand-accent font-display font-semibold tracking-widest uppercase text-xs mb-6">Secciones</h4>
+                        <ul class="space-y-4">
+                            <li><button onclick="navigateTo('home')" class="text-slate-400 hover:text-brand-accent text-sm font-light transition-colors focus:outline-none">Inicio</button></li>
+                            <li><button onclick="navigateTo('legacy')" class="text-slate-400 hover:text-brand-accent text-sm font-light transition-colors focus:outline-none">Legado</button></li>
+                            <li><button onclick="navigateTo('catalog', 'tour')" class="text-slate-400 hover:text-brand-accent text-sm font-light transition-colors focus:outline-none">Tours</button></li>
+                            <li><button onclick="navigateTo('contact')" class="text-slate-400 hover:text-brand-accent text-sm font-light transition-colors focus:outline-none">Reserva</button></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-brand-accent font-display font-semibold tracking-widest uppercase text-xs mb-6">Ubicación</h4>
+                        <p class="text-slate-400 font-light text-sm leading-relaxed mb-4">
+                            Cancún, Quintana Roo<br>México
+                        </p>
+                        <button onclick="openWhatsApp('Hola Concierge.')" class="text-brand-accent hover:text-white text-sm font-semibold transition-colors focus:outline-none">
+                            Contacto Directo <i class="fab fa-whatsapp ml-1"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-slate-500 text-xs font-light">
+                    <p>&copy; 2026 Amazing Colors Private Tours. Todos los derechos reservados.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-white transition-colors">Privacidad</a>
+                        <a href="#" class="hover:text-white transition-colors">Términos de servicio</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
     </div>
 
-    <!-- Footer Details -->
-    <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 py-12 px-4 sm:px-6 lg:px-8 mt-auto">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm">
-            <div class="flex items-center space-x-3">
-                <div class="p-2 bg-slate-800 rounded-lg">
-                    <i data-lucide="compass" class="w-5 h-5 text-blue-400"></i>
-                </div>
-                <div>
-                    <p class="font-bold text-white">NAUTICA Residences</p>
-                    <p class="text-xs text-slate-500">&copy; 2026 Todos los derechos reservados.</p>
-                </div>
-            </div>
-            
-            <div class="flex flex-col sm:flex-row items-center gap-4">
-                <button onclick="toggleUrlSettings()" class="text-xs font-bold text-slate-400 hover:text-white transition-colors flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-750 px-3 py-2 rounded-xl">
-                    <i data-lucide="settings" class="w-3.5 h-3.5"></i>
-                    <span>Configurar Enlace Google Sheets</span>
-                </button>
-            </div>
-        </div>
-
-        <div id="urlSettingsPanel" class="hidden max-w-7xl mx-auto mt-6 p-6 bg-slate-800 rounded-2xl border border-slate-750 flex flex-col gap-3">
-            <h5 class="text-sm font-bold text-white uppercase tracking-wider">Configuración del Enlace del Inventario</h5>
-            <p class="text-xs text-slate-400">Pega el nuevo enlace publicado en formato TSV aquí:</p>
-            <div class="flex flex-col sm:flex-row gap-2">
-                <input id="inputTsvUrl" type="text" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTafqCNoOZsFQESQJez6BkoOanJtx4XiK_jd794XU2zBUtjn7wKPJJW4Yo28zVcd--6FaXbenDbiuyZ/pub?output=tsv" class="flex-grow bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-2 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none">
-                <button onclick="saveTsvUrl()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold text-xs transition-all">
-                    Guardar y Recargar
-                </button>
-            </div>
-        </div>
-    </footer>
-
-    <!-- App Logic -->
+    <!-- ========================================== -->
+    <!-- SCRIPTS DE NAVEGACIÓN, MOTOR Y TSV         -->
+    <!-- ========================================== -->
     <script>
-        let inventoryData = [];
-        let filteredItems = [];
-        let tsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTafqCNoOZsFQESQJez6BkoOanJtx4XiK_jd794XU2zBUtjn7wKPJJW4Yo28zVcd--6FaXbenDbiuyZ/pub?output=tsv";
+        const TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFWLeg9DvMAXX5TwL8JXwY3fm0UDHeKxnqmtYVZGQNNHcTSJG32pLWZVHCMA2-Eo_lZ9sVHqKtgvIO/pub?output=tsv';
+        const WHATSAPP_NUMBER = "5219981234567";
+        // Base de producción absoluta para renderizar perfectamente en Google Chrome, Safari y Canvas Preview
+        const GITHUB_BASE = 'https://raw.githubusercontent.com/beamazingcolors/amazingcolors/main/';
 
-        // Programmatic luxury floor planner database generator (Exactly 380 units for Torre A + Torre B)
-        function buildCompleteLocalInventory() {
-            const data = [];
-            const towers = ["Torre A", "Torre B"];
+        let fullData = [];
+        let globalHeaders = [];
 
-            towers.forEach(tower => {
-                // 1. Garden Houses (14 units: GH 1 to GH 14)
-                for (let i = 1; i <= 14; i++) {
-                    let status = "SI";
-                    if (i === 5 || i === 12) status = "RESERVADO";
-                    if (i === 7 || i === 8) status = "VENDIDO";
-
-                    data.push({
-                        source: tower,
-                        unit: `GH ${i}`,
-                        typology: i % 3 === 0 ? "3 R" : (i % 2 === 0 ? "2 R + DEN" : "1 R + DEN"),
-                        model: `GH-M${(i % 3) + 1}`,
-                        m2: 112.00 + (i * 4),
-                        view: i % 3 === 0 ? "Laguna" : (i % 2 === 0 ? "Interior" : "Exterior"),
-                        orientation: i % 2 === 0 ? "Sur" : "Norte",
-                        price: status !== "VENDIDO" ? `$${(8500000 + (i * 150000)).toLocaleString()}` : "",
-                        availability: status
-                    });
-                }
-
-                // 2. Floors 4 to 15 (12 floors * 14 units = 168 units)
-                const models = [
-                    { sfx: "01", typology: "2 R + DEN", model: "L1", m2: 113.56, view: "Exterior", orientation: "Norte", basePrice: 8900000 },
-                    { sfx: "02", typology: "2 R + DEN", model: "L2", m2: 126.09, view: "Interior", orientation: "Sur", basePrice: 9900000 },
-                    { sfx: "03", typology: "1 R + DEN", model: "S1", m2: 72.32, view: "Interior", orientation: "Sur", basePrice: 5900000 },
-                    { sfx: "04", typology: "2 R", model: "M1", m2: 115.67, view: "Interior", orientation: "Sur", basePrice: 9300000 },
-                    { sfx: "05", typology: "2 R", model: "M1", m2: 115.67, view: "Interior", orientation: "Sur", basePrice: 9300000 },
-                    { sfx: "06", typology: "1 R + DEN", model: "S1", m2: 72.32, view: "Interior", orientation: "Sur", basePrice: 5900000 },
-                    { sfx: "07", typology: "3 R", model: "V1", m2: 235.56, view: "Interior", orientation: "Sur", basePrice: 19200000 },
-                    { sfx: "08", typology: "3 R", model: "V1", m2: 235.56, view: "Interior", orientation: "Sur", basePrice: 19200000 },
-                    { sfx: "09", typology: "3 R", model: "V2", m2: 249.21, view: "Interior", orientation: "Sur", basePrice: 20300000 },
-                    { sfx: "10", typology: "1 R + DEN", model: "S1", m2: 71.25, view: "Exterior", orientation: "Norte", basePrice: 5800000 },
-                    { sfx: "11", typology: "2 R", model: "M2", m2: 113.36, view: "Exterior", orientation: "Norte", basePrice: 9000000 },
-                    { sfx: "12", typology: "1 R + DEN", model: "S1", m2: 71.25, view: "Exterior", orientation: "Norte", basePrice: 5800000 },
-                    { sfx: "13", typology: "1 R + DEN", model: "S1", m2: 71.25, view: "Exterior", orientation: "Norte", basePrice: 5800000 },
-                    { sfx: "14", typology: "2 R", model: "M2", m2: 113.36, view: "Exterior", orientation: "Norte", basePrice: 9000000 }
-                ];
-
-                for (let floor = 4; floor <= 15; floor++) {
-                    models.forEach(m => {
-                        let status = "SI";
-                        // Distribute availability statuses beautifully
-                        if ((floor + parseInt(m.sfx)) % 11 === 0) status = "RESERVADO";
-                        else if ((floor + parseInt(m.sfx)) % 7 === 0) status = "VENDIDO";
-
-                        const priceEscalated = m.basePrice + ((floor - 4) * 35000);
-
-                        data.push({
-                            source: tower,
-                            unit: `${floor}${m.sfx}`,
-                            typology: m.typology,
-                            model: m.model,
-                            m2: m.m2,
-                            view: m.view,
-                            orientation: m.orientation,
-                            price: status !== "VENDIDO" ? `$${priceEscalated.toLocaleString()}` : "",
-                            availability: status
-                        });
-                    });
-                }
-
-                // 3. Penthouses Floor 16 (8 units)
-                for (let i = 1; i <= 8; i++) {
-                    let status = i === 4 ? "RESERVADO" : (i === 6 ? "VENDIDO" : "SI");
-                    data.push({
-                        source: tower,
-                        unit: `160${i}`,
-                        typology: "Penthouse",
-                        model: `PH-A${i}`,
-                        m2: 310.45 + (i * 12),
-                        view: "Laguna",
-                        orientation: "Este/Sur",
-                        price: status !== "VENDIDO" ? `$${(25000000 + (i * 500000)).toLocaleString()}` : "",
-                        availability: status
-                    });
-                }
-            });
-
-            return data;
-        }
-
-        window.onload = function() {
-            const savedUrl = localStorage.getItem("nautica_tsv_url");
-            if (savedUrl) {
-                tsvUrl = savedUrl;
-                document.getElementById("inputTsvUrl").value = savedUrl;
-            }
-            fetchInventoryData();
-        }
-
-        function fetchInventoryData() {
-            document.getElementById("loader").classList.remove("hidden");
-            document.getElementById("unitGrid").classList.add("hidden");
-            document.getElementById("emptyState").classList.add("hidden");
-
-            fetch(tsvUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error("Accediendo a base de datos interna...");
-                    return response.text();
-                })
-                .then(text => {
-                    parseTsvData(text);
-                    document.getElementById("syncStatus").classList.remove("hidden");
-                })
-                .catch(error => {
-                    console.warn(error.message);
-                    useLocalFallback();
-                    document.getElementById("syncStatus").classList.add("hidden");
-                })
-                .finally(() => {
-                    lucide.createIcons();
-                });
-        }
-
-        function useLocalFallback() {
-            inventoryData = buildCompleteLocalInventory();
-            processInventoryAndBuildFilters();
-        }
-
-        function parseTsvData(tsvText) {
-            const rows = tsvText.split("\n").map(r => r.split("\t"));
-            if (rows.length < 2) {
-                useLocalFallback();
+        /* SISTEMA ULTRA-ROBUSTO DE DETECCIÓN DE ERRORES (REINTENTO DINÁMICO) */
+        function handleImgError(img, fallbackCategory = 'general') {
+            // Evitar bucles infinitos si la imagen de fallback definitiva también falla
+            if (img.dataset.ultimateFailed) {
+                img.src = GITHUB_BASE + 'lg2.png';
+                img.style.objectFit = 'contain';
+                img.style.padding = '2rem';
+                img.style.backgroundColor = '#071021';
                 return;
             }
 
-            // High robust header matching
-            let headerRowIndex = 0;
-            for (let i = 0; i < Math.min(rows.length, 10); i++) {
-                const hasUnit = rows[i].some(cell => {
-                    const val = cell.trim().toUpperCase();
-                    return val.includes("UNIDAD") || val.includes("UNIT") || val.includes("DEPTO");
-                });
-                if (hasUnit) {
-                    headerRowIndex = i;
-                    break;
+            const currentSrc = img.src;
+
+            // Usar la propiedad de conjunto de datos de HTML5 para preservar el estado de reintentos
+            if (currentSrc.includes('raw.githubusercontent.com') || currentSrc.includes('github.io')) {
+                const lastDot = currentSrc.lastIndexOf('.');
+                const basePath = lastDot !== -1 ? currentSrc.substring(0, lastDot) : currentSrc;
+                const currentExt = lastDot !== -1 ? currentSrc.substring(lastDot).toLowerCase() : '';
+                
+                let attempts = parseInt(img.dataset.extAttempts || '0');
+                
+                if (attempts < 4) {
+                    img.dataset.extAttempts = (attempts + 1).toString();
+                    if (currentExt.includes('png')) {
+                        img.src = basePath + '.jpg';
+                        return;
+                    } else if (currentExt.includes('jpg')) {
+                        img.src = basePath + '.jpeg';
+                        return;
+                    } else if (currentExt.includes('jpeg')) {
+                        img.src = basePath + '.PNG';
+                        return;
+                    } else {
+                        img.src = basePath + '.JPG';
+                        return;
+                    }
                 }
             }
 
-            const rawHeaders = rows[headerRowIndex].map(h => h.trim().toUpperCase());
-            
-            const colIndex = {
-                source: rawHeaders.findIndex(h => h.includes("TORRE") || h.includes("SOURCE")),
-                unit: rawHeaders.findIndex(h => h.includes("UNIDAD") || h.includes("UNIT")),
-                typology: rawHeaders.findIndex(h => h.includes("RECAMARAS") || h.includes("TYPOLOGY") || h.includes("TIPO")),
-                model: rawHeaders.findIndex(h => h.includes("MODELO") || h.includes("MODEL")),
-                m2: rawHeaders.findIndex(h => h.includes("M2") || h.includes("TOTAL")),
-                view: rawHeaders.findIndex(h => h.includes("VISTA") || h.includes("VIEW")),
-                orientation: rawHeaders.findIndex(h => h.includes("ORIENTACIÓN") || h.includes("ORIENTATION")),
-                price: rawHeaders.findIndex(h => h.includes("PRECIO") || h.includes("PRICE")),
-                availability: rawHeaders.findIndex(h => h.includes("DISPONIBILIDAD") || h.includes("ESTATUS"))
+            // Marcar la imagen como fallida para mostrar el respaldo estético de Unsplash
+            img.dataset.ultimateFailed = "true";
+
+            const fallbacks = {
+                tours: "https://images.unsplash.com/photo-1583037189850-1921ae7c6c22?auto=format&fit=crop&w=600&q=70",
+                yates: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=70",
+                transportacion: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=70",
+                cenotes: "https://images.unsplash.com/photo-1583037189850-1921ae7c6c22?auto=format&fit=crop&w=600&q=70",
+                arqueologia: "https://images.unsplash.com/photo-1518638150341-f706e86654de?auto=format&fit=crop&w=600&q=70",
+                playas: "https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=600&q=70",
+                general: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=70"
             };
 
-            const parsedData = [];
-            let lastTorre = "Torre A";
+            img.src = fallbacks[fallbackCategory] || fallbacks.general;
+            img.style.objectFit = 'cover';
+        }
 
-            for (let i = headerRowIndex + 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (row.length < 2) continue;
-
-                let sourceVal = colIndex.source !== -1 ? row[colIndex.source]?.trim() : "";
-                if (sourceVal) {
-                    lastTorre = sourceVal;
-                } else {
-                    sourceVal = lastTorre;
+        /* LECTOR DE DATOS ADAPTATIVO EXTREMADAMENTE ROBUSTO */
+        function getCleanValue(item, possibleHeaders) {
+            if (!item) return '';
+            // Crear versiones normalizadas de las llaves buscadas para un filtrado elástico
+            const normalizedSearched = possibleHeaders.map(h => h.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9_]/g, ''));
+            
+            // 1. Intento de coincidencia exacta y normalizada
+            for (let originalKey in item) {
+                let normalizedKey = originalKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9_]/g, '');
+                if (normalizedSearched.includes(normalizedKey)) {
+                    let val = item[originalKey]?.trim();
+                    if (!val || val.toLowerCase() === 'undefined' || val.toLowerCase() === 'null') continue;
+                    if (val.startsWith('::')) val = val.substring(2).trim();
+                    else if (val.startsWith(':')) val = val.substring(1).trim();
+                    return val;
                 }
+            }
+            
+            // 2. Intento de coincidencia parcial elástica
+            for (let originalKey in item) {
+                let normalizedKey = originalKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9_]/g, '');
+                for (let search of normalizedSearched) {
+                    if (normalizedKey.includes(search) || search.includes(normalizedKey)) {
+                        let val = item[originalKey]?.trim();
+                        if (!val || val.toLowerCase() === 'undefined' || val.toLowerCase() === 'null') continue;
+                        if (val.startsWith('::')) val = val.substring(2).trim();
+                        else if (val.startsWith(':')) val = val.substring(1).trim();
+                        return val;
+                    }
+                }
+            }
+            return '';
+        }
 
-                const unitVal = colIndex.unit !== -1 ? row[colIndex.unit]?.trim() : "";
-                if (!unitVal) continue; // Skip lines with empty units
-
-                const typologyVal = colIndex.typology !== -1 ? row[colIndex.typology]?.trim() : "2 R";
-                const modelVal = colIndex.model !== -1 ? row[colIndex.model]?.trim() : "Específico";
-                const m2Val = colIndex.m2 !== -1 ? parseFloat(row[colIndex.m2]?.replace(/[^\d.]/g, '')) : 100;
-                const viewVal = colIndex.view !== -1 ? row[colIndex.view]?.trim() : "Exterior";
-                const orientationVal = colIndex.orientation !== -1 ? row[colIndex.orientation]?.trim() : "Norte";
-                const priceVal = colIndex.price !== -1 ? row[colIndex.price]?.trim() : "";
-                
-                // Maps: Blanco (SI) | Amarillo (RESERVADO) | Rojo (VENDIDO)
-                let availabilityVal = "SI";
-                if (colIndex.availability !== -1) {
-                    const val = row[colIndex.availability]?.trim().toUpperCase();
-                    if (val.includes("RESERV") || val === "AMARILLO" || val === "NO DISPONIBLE") {
-                        availabilityVal = "RESERVADO";
-                    } else if (val.includes("VEND") || val === "ROJO" || val === "NO" || val === "VENDIDA") {
-                        availabilityVal = "VENDIDO";
+        // PARSER DEL TSV ADAPTATIVO RFC 4180
+        function parseTSV(text) {
+            let rows = [];
+            let row = [];
+            let field = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let nextChar = text[i+1];
+                if (inQuotes) {
+                    if (char === '"') {
+                        if (nextChar === '"') {
+                            field += '"';
+                            i++; // Saltar siguiente comilla
+                        } else {
+                            inQuotes = false; // Cerrar comillas
+                        }
+                    } else {
+                        field += char;
                     }
                 } else {
-                    availabilityVal = priceVal ? "SI" : "VENDIDO";
+                    if (char === '"') {
+                        inQuotes = true;
+                    } else if (char === '\t') {
+                        row.push(field);
+                        field = '';
+                    } else if (char === '\n' || char === '\r') {
+                        if (char === '\r' && nextChar === '\n') i++; 
+                        row.push(field);
+                        rows.push(row);
+                        row = [];
+                        field = '';
+                    } else {
+                        field += char;
+                    }
                 }
-
-                parsedData.push({
-                    source: sourceVal,
-                    unit: unitVal,
-                    typology: typologyVal,
-                    model: modelVal,
-                    m2: isNaN(m2Val) ? 0 : m2Val,
-                    view: viewVal || "Exterior",
-                    orientation: orientationVal || "Norte",
-                    price: priceVal,
-                    availability: availabilityVal
-                });
             }
-
-            if (parsedData.length > 0) {
-                inventoryData = parsedData;
-                processInventoryAndBuildFilters();
-            } else {
-                useLocalFallback();
+            if (field || row.length > 0) {
+                row.push(field);
+                rows.push(row);
             }
+            return rows;
         }
 
-        function processInventoryAndBuildFilters() {
-            document.getElementById("loader").classList.add("hidden");
-            document.getElementById("unitGrid").classList.remove("hidden");
-
-            const torres = [...new Set(inventoryData.map(item => item.source))].filter(Boolean);
-            const recamaras = [...new Set(inventoryData.map(item => getBedroomsCategory(item.typology)))].filter(Boolean);
-            const vistas = [...new Set(inventoryData.map(item => item.view))].filter(Boolean);
-
-            const filterTorre = document.getElementById("filterTorre");
-            filterTorre.innerHTML = '<option value="all">Todas las Torres</option>';
-            torres.forEach(t => {
-                filterTorre.innerHTML += `<option value="${t}">${t}</option>`;
-            });
-
-            const filterRecamaras = document.getElementById("filterRecamaras");
-            filterRecamaras.innerHTML = '<option value="all">Todas las Recámaras</option>';
-            recamaras.sort().forEach(r => {
-                filterRecamaras.innerHTML += `<option value="${r}">${r}</option>`;
-            });
-
-            const filterVistas = document.getElementById("filterVistas");
-            filterVistas.innerHTML = '<option value="all">Todas las Vistas</option>';
-            vistas.forEach(v => {
-                filterVistas.innerHTML += `<option value="${v}">${v}</option>`;
-            });
-
-            calculateOverviewStats(inventoryData);
-            applyFilters();
-        }
-
-        function getBedroomsCategory(typologyStr) {
-            if (!typologyStr) return "2 Recámaras";
-            const normalized = typologyStr.toUpperCase();
-            if (normalized.includes("PH") || normalized.includes("PENTHOUSE")) return "Penthouse";
-            if (normalized.includes("1")) return "1 Recámara";
-            if (normalized.includes("2")) return "2 Recámaras";
-            if (normalized.includes("3")) return "3 Recámaras";
-            return typologyStr;
-        }
-
-        function calculateOverviewStats(dataList) {
-            const total = dataList.length;
-            const available = dataList.filter(item => item.availability === "SI").length;
-            const reserved = dataList.filter(item => item.availability === "RESERVADO").length;
-            const sold = dataList.filter(item => item.availability === "VENDIDO").length;
-            const percentAvailable = total > 0 ? Math.round((available / total) * 100) : 0;
-
-            document.getElementById("statTotal").innerText = total;
-            document.getElementById("statAvailable").innerText = available;
-            document.getElementById("statReserved").innerText = reserved;
-            document.getElementById("statSold").innerText = sold;
-            document.getElementById("statPercent").innerText = percentAvailable + "%";
-        }
-
-        function renderCatalog(items) {
-            const grid = document.getElementById("unitGrid");
-            const emptyState = document.getElementById("emptyState");
+        // Obtener ruta local relativa del archivo mapeada al Folio de la hoja de cálculo
+        function getImgUrlByFolio(folioValue) {
+            if (!folioValue || folioValue === '') return '';
+            let fileName = folioValue.trim();
+            let lower = fileName.toLowerCase();
             
-            if (items.length === 0) {
-                grid.innerHTML = "";
-                emptyState.classList.remove("hidden");
-                document.getElementById("filteredCount").innerText = "0 unidades";
-                return;
+            // Prefijo adaptativo para formatos PNG o JPG cargados en tu GitHub
+            if (!lower.endsWith('.jpg') && !lower.endsWith('.jpeg') && !lower.endsWith('.png')) {
+                if (lower.startsWith('tr') || lower.startsWith('mr') || lower === 'ca') {
+                    fileName += '.png';
+                } else {
+                    fileName += '.jpg';
+                }
+            }
+            // Retornar la URL absoluta de GitHub para garantizar compatibilidad total en Chrome, Safari y el Preview
+            return GITHUB_BASE + fileName;
+        }
+
+        async function init() {
+            try {
+                const response = await fetch(TSV_URL);
+                const text = await response.text();
+                
+                // Limpiar el Byte Order Mark (BOM)
+                let cleanText = text;
+                if (cleanText.charCodeAt(0) === 0xFEFF) {
+                    cleanText = cleanText.substring(1);
+                }
+                
+                const rows = parseTSV(cleanText).filter(r => r.length > 0 && r.some(cell => cell.trim() !== ''));
+                if (rows.length < 2) return;
+                
+                const rawHeaders = rows[0].map(h => h.trim());
+                globalHeaders = rawHeaders; // Guardar encabezados reales para evitar duplicidades
+                const cleanHeaders = rawHeaders.map(h => h.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9_]/g, ''));
+                
+                fullData = rows.slice(1).map(row => {
+                    let item = {}; 
+                    rawHeaders.forEach((h, i) => { 
+                        const cleanH = cleanHeaders[i];
+                        const val = row[i] !== undefined ? row[i].trim() : '';
+                        item[cleanH] = val; 
+                        item[h] = val;
+                    }); 
+                    return item;
+                });
+                
+                // Sincronizar catálogo inicial
+                filterCatalog('tour');
+
+                // Inicializar carrusel dinámico de inicio
+                initHomeCarousel();
+            } catch (err) { console.error("Error al obtener la base de datos:", err); }
+        }
+
+        function initHomeCarousel() {
+            const scrollContainer = document.getElementById('home-carousel-scroll');
+            if (!scrollContainer || fullData.length === 0) return;
+
+            // Filtrar únicamente los elementos que contienen un folio válido
+            let itemsWithImages = fullData.filter(item => {
+                let folio = getCleanValue(item, ['Folio', 'folio', 'FOLIO']);
+                return folio && folio.trim() !== '';
+            });
+
+            if (itemsWithImages.length === 0) return;
+
+            itemsWithImages.sort(() => 0.5 - Math.random());
+            let selectedItems = itemsWithImages.slice(0, 5);
+
+            let setHtml = '';
+            selectedItems.forEach(item => {
+                let name = getCleanValue(item, ['Nombre', 'NOMBRE']);
+                let folio = getCleanValue(item, ['Folio', 'folio', 'FOLIO']);
+                let imgUrl = getImgUrlByFolio(folio);
+                let tipo = getCleanValue(item, ['TIPO', 'Tipo']).toLowerCase();
+                
+                let categoryType = 'tour';
+                if (tipo.includes('yate')) categoryType = 'yate';
+                if (tipo.includes('trans')) categoryType = 'transportacion';
+
+                setHtml += `
+                    <div class="relative w-64 h-80 md:w-80 md:h-[400px] flex-shrink-0 group overflow-hidden rounded-2xl cursor-pointer shadow-xl" onclick="navigateTo('catalog', '${categoryType}')">
+                        <img src="${imgUrl}" alt="${name}" class="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700" onerror="handleImgError(this, '${categoryType}')">
+                        <div class="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/20 to-transparent"></div>
+                        <h4 class="absolute bottom-6 left-6 text-white font-display font-semibold tracking-widest uppercase text-sm">${name}</h4>
+                    </div>
+                `;
+            });
+
+            scrollContainer.innerHTML = `
+                <div class="flex gap-4 md:gap-6 pr-4 md:pr-6">${setHtml}</div>
+                <div class="flex gap-4 md:gap-6 pr-4 md:pr-6">${setHtml}</div>
+            `;
+        }
+
+        // MOTOR DE COPYWRITING DINÁMICO
+        function getCreativeSlogan(item, index) {
+            const slogansTours = [
+                "Travesía Mística Única",
+                "Aventura Premium a tu Medida",
+                "Exploración de Leyenda",
+                "Descubrimiento de Élite",
+                "Experiencia de Lujo Absoluto",
+                "Ruta Ancestral de Ensueño"
+            ];
+            const slogansYates = [
+                "Navegación de Alta Costura",
+                "Elegancia sobre el Mar Turquesa",
+                "Travesía Privada de Lujo",
+                "Atardecer Exclusivo en Popa",
+                "Carta Náutica de Ensueño",
+                "Libertad Absoluta en Alta Mar"
+            ];
+            const slogansTrans = [
+                "Arribo Impecable y Seguro",
+                "Logística VIP con Chauffeur",
+                "Confort de Primera Clase",
+                "Privacidad Total en Ruta",
+                "Conexión VIP Riviera Maya",
+                "Transportación de Alta Gama"
+            ];
+            
+            let tipo = getCleanValue(item, ['TIPO', 'Tipo']).toLowerCase();
+            let arr = slogansTours;
+            if (tipo.includes('yate')) arr = slogansYates;
+            else if (tipo.includes('trans') || tipo.includes('traslado')) arr = slogansTrans;
+            
+            return arr[index % arr.length];
+        }
+
+        function filterCatalog(category) {
+            // Sincronizar botones de categorías del catálogo
+            document.querySelectorAll('#page-catalog button[id^="sub-nav-"]').forEach(btn => {
+                const isTarget = btn.id === `sub-nav-${category}`;
+                btn.classList.toggle('bg-brand-accent', isTarget);
+                btn.classList.toggle('text-white', isTarget);
+                btn.classList.toggle('border-brand-accent', isTarget);
+                btn.classList.toggle('text-white/70', !isTarget);
+                btn.classList.toggle('border-white/10', !isTarget);
+            });
+
+            const badge = document.getElementById('catalog-category-badge');
+            const title = document.getElementById('catalog-category-title');
+            const desc = document.getElementById('catalog-category-desc');
+
+            if (category === 'tour') {
+                badge.innerText = "Momentos inolvidables";
+                title.innerHTML = `Tours & <span class="font-serif italic font-bold text-brand-accent">Aventuras</span>`;
+                desc.innerText = "Explora cenotes místicos, ruinas mayas sagradas y playas paradisíacas de manera completamente privada.";
+            } else if (category === 'yate') {
+                badge.innerText = "Nuestra Flota";
+                title.innerHTML = `Yates & <span class="font-serif italic font-bold text-brand-accent">Catamaranes</span>`;
+                desc.innerText = "Navegación premium sobre el horizonte turquesa con servicio de tripulación de nivel internacional.";
+            } else if (category === 'transportacion') {
+                badge.innerText = "Logística de Élite";
+                title.innerHTML = `Traslados & <span class="font-serif italic font-bold text-brand-accent">Chauffeur</span>`;
+                desc.innerText = "Llegadas impecables sin esperas ni transbordos en vehículos climatizados Suburban o SUV de alta gama.";
             }
 
-            emptyState.classList.add("hidden");
-            document.getElementById("filteredCount").innerText = `${items.length} unidad${items.length > 1 ? 'es' : ''}`;
-
-            grid.innerHTML = items.map((unit, index) => {
-                const status = unit.availability;
-                let bgStyle = "bg-white border-gold-500/10 hover:border-gold-500 hover:shadow-2xl hover:shadow-gold-500/10";
-                let textStyle = "text-slate-950";
-                let descStyle = "text-slate-500";
-                let badgeMarkup = "";
-
-                // Color mappings: Blanco = Disponible, Amarillo = Reservado (No dispo), Rojo = Vendido (No dispo)
-                if (status === "SI") {
-                    bgStyle = "bg-white border-slate-200 hover:shadow-2xl hover:shadow-gold-500/10";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-slate-100 text-slate-800 border border-slate-200">
-                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500"></span>
-                                     Disponible
-                                   </span>`;
-                } else if (status === "RESERVADO") {
-                    bgStyle = "bg-amber-100 border-amber-300";
-                    textStyle = "text-amber-950";
-                    descStyle = "text-amber-800";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-amber-200 text-amber-900 border border-amber-300">
-                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500"></span>
-                                     Reservada
-                                   </span>`;
-                } else {
-                    bgStyle = "bg-rose-100 border-rose-300";
-                    textStyle = "text-rose-950";
-                    descStyle = "text-rose-800";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-rose-200 text-rose-900 border border-rose-300">
-                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-rose-500"></span>
-                                     No Disponible
-                                   </span>`;
+            const grid = document.getElementById('catalog-grid'); 
+            grid.innerHTML = '';
+            
+            const filtered = globalActivitiesFiltered(category);
+            
+            filtered.forEach((item, idx) => {
+                const card = document.createElement('div'); 
+                card.className = 'card w-full max-w-[350px] bg-brand-dark/40 border border-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between text-white';
+                let nombre = getCleanValue(item, ['Nombre', 'NOMBRE']);
+                card.onclick = () => openDetailModal(nombre);
+                
+                let folioValue = getCleanValue(item, ['Folio', 'folio', 'FOLIO']);
+                let imgUrl = getImgUrlByFolio(folioValue);
+                
+                let precio = getCleanValue(item, ['Precio', 'PRECIO']);
+                if (precio === '' || precio.toLowerCase() === 'consultar') {
+                    precio = getCreativeSlogan(item, idx);
                 }
 
-                const priceFormatted = unit.price && unit.price.trim() !== "" ? unit.price : (status === "RESERVADO" ? "Precio en Reserva" : "Vendido");
+                let extraSpecsHtml = '';
+                const excludedHeaders = ['nombre', 'codigo', 'tipo', 'precio', 'descriptivo', 'detalles', 'incluye', 'catalogo', 'folio', 'pax'];
                 
-                return `
-                    <div class="border rounded-3xl p-6 transition-all duration-300 flex flex-col justify-between group ${bgStyle}">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-[9px] font-bold px-2.5 py-1 rounded bg-nautica-950 text-gold-500 tracking-widest uppercase">${unit.source}</span>
-                                ${badgeMarkup}
-                            </div>
-                            
-                            <h4 class="text-2xl font-serif tracking-wide ${textStyle}">Unidad ${unit.unit}</h4>
-                            <p class="text-xs ${descStyle} font-light tracking-widest mb-4 uppercase">Modelo: ${unit.model}</p>
-                            
-                            <div class="grid grid-cols-2 gap-2 mb-4">
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
-                                    <i data-lucide="bed" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold ${textStyle}">${getBedroomsCategory(unit.typology)}</span>
-                                </div>
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
-                                    <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold ${textStyle}">${unit.m2 ? unit.m2 + ' m²' : 'N/D'}</span>
-                                </div>
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2 col-span-2">
-                                    <i data-lucide="eye" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold truncate ${textStyle}">Vista: ${unit.view} (${unit.orientation})</span>
-                                </div>
-                            </div>
-                        </div>
+                globalHeaders.forEach(header => {
+                    let keyNormalized = header.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '').trim();
+                    
+                    if (excludedHeaders.some(ex => keyNormalized === ex || keyNormalized.includes(ex))) {
+                        return;
+                    }
 
-                        <div class="border-t border-black/5 pt-4 mt-2 flex items-center justify-between">
-                            <div class="flex flex-col">
-                                <span class="text-[8px] font-bold uppercase tracking-widest ${descStyle}">Inversión</span>
-                                <span class="text-lg font-serif font-semibold ${textStyle}">${priceFormatted}</span>
+                    let val = getCleanValue(item, [header]); 
+                    if (val && val !== '') {
+                        let cleanLabel = header.trim();
+                        if (cleanLabel.endsWith(':')) {
+                            cleanLabel = cleanLabel.slice(0, -1).trim();
+                        }
+
+                        extraSpecsHtml += `
+                            <div class="spec-row flex justify-between text-xs py-1 border-b border-white/5 last:border-0">
+                                <span class="spec-label font-bold text-brand-accent uppercase tracking-wider text-[10px]">${cleanLabel}:</span>
+                                <span class="spec-value text-slate-300 text-right">${val}</span>
                             </div>
-                            <button onclick="openModal(${index})" class="p-2.5 rounded-full bg-nautica-950 text-gold-500 hover:bg-gold-500 hover:text-nautica-950 transition-all shadow-md active:scale-95">
-                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        `;
+                    }
+                });
+
+                card.innerHTML = `
+                    <div class="img-container group relative h-64 overflow-hidden bg-brand-dark">
+                        ${imgUrl ? `<img src="${imgUrl}" onerror="handleImgError(this, '${category}')" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105">` : ''}
+                        
+                        <button onclick="openZoomModal('${imgUrl}', event)" class="absolute bottom-4 right-4 bg-brand-dark/80 hover:bg-brand-accent text-white hover:text-brand-dark w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 hover:scale-110 focus:outline-none" title="Ver imagen completa">
+                            <i class="fas fa-search-plus text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="card-info p-6 flex flex-col justify-between flex-grow">
+                        <div>
+                            <h3 class="card-title text-xl font-bold font-display text-white mb-2">${nombre}</h3>
+                            <p class="card-price text-brand-accent font-semibold text-sm mb-4">${precio}</p>
+                        </div>
+                        ${extraSpecsHtml ? `<div class="card-extra-specs border-t border-dashed border-white/10 pt-3 mt-4 flex flex-col gap-1">${extraSpecsHtml}</div>` : ''}
+                        
+                        <div class="pt-6 mt-4 border-t border-white/5">
+                            <button class="w-full border border-brand-accent/40 hover:border-brand-accent hover:bg-brand-accent/15 text-brand-accent hover:text-white font-medium tracking-[0.2em] text-[9px] uppercase transition-all duration-300 rounded-full py-2 px-4 flex items-center justify-center gap-1.5 focus:outline-none">
+                                Ver Detalles & Reserva <i class="fas fa-chevron-right text-[7px] transition-transform"></i>
                             </button>
                         </div>
                     </div>
                 `;
-            }).join('');
-
-            lucide.createIcons();
-        }
-
-        function applyFilters() {
-            const selectTorre = document.getElementById("filterTorre").value;
-            const selectRecamaras = document.getElementById("filterRecamaras").value;
-            const selectVistas = document.getElementById("filterVistas").value;
-            const selectDisponibilidad = document.getElementById("filterDisponibilidad").value;
-            const query = document.getElementById("searchBar").value.toLowerCase().trim();
-            const sortOrder = document.getElementById("sortOrder").value;
-
-            filteredItems = inventoryData.filter(item => {
-                const passTorre = selectTorre === "all" || item.source === selectTorre;
-                const passRecamaras = selectRecamaras === "all" || getBedroomsCategory(item.typology) === selectRecamaras;
-                const passVistas = selectVistas === "all" || item.view === selectVistas;
-                
-                let passDispo = true;
-                if (selectDisponibilidad === "available") {
-                    passDispo = item.availability === "SI";
-                } else if (selectDisponibilidad === "reserved") {
-                    passDispo = item.availability === "RESERVADO";
-                } else if (selectDisponibilidad === "sold") {
-                    passDispo = item.availability === "VENDIDO";
-                }
-
-                let passQuery = true;
-                if (query) {
-                    passQuery = item.unit.toLowerCase().includes(query) || 
-                                item.model.toLowerCase().includes(query) || 
-                                item.typology.toLowerCase().includes(query) || 
-                                item.view.toLowerCase().includes(query) || 
-                                item.orientation.toLowerCase().includes(query);
-                }
-
-                return passTorre && passRecamaras && passVistas && passDispo && passQuery;
+                grid.appendChild(card); 
+                setTimeout(() => card.classList.add('visible'), idx * 80);
             });
+        }
 
-            if (sortOrder === "asc") {
-                filteredItems.sort((a, b) => getNumericPrice(a.price) - getNumericPrice(b.price));
-            } else if (sortOrder === "desc") {
-                filteredItems.sort((a, b) => getNumericPrice(b.price) - getNumericPrice(a.price));
+        function globalActivitiesFiltered(category) {
+            return fullData.filter(item => {
+                let tipoSheet = getCleanValue(item, ['TIPO', 'Tipo']).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                let catTarget = category.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                return tipoSheet.includes(catTarget);
+            });
+        }
+
+        // SISTEMA DE NAVEGACIÓN SPA CINEMÁTICO SIN SALTOS
+        function navigateTo(pageId, subCategory = '') {
+            const currentActive = document.querySelector('.page-view.active');
+            const targetPage = document.getElementById(`page-${pageId}`);
+            
+            if(currentActive === targetPage && !subCategory) return;
+
+            const hash = subCategory ? `${pageId}-${subCategory}` : pageId;
+            if(history.pushState) history.pushState(null, null, `#${hash}`);
+            else location.hash = `#${hash}`;
+            trackConversion('Page_View', { page: pageId, sub: subCategory });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if(currentActive) {
+                // Transición cinemática de desvanecimiento
+                currentActive.style.opacity = '0';
+                currentActive.style.transform = 'scale(0.97) translateY(-20px)';
+                currentActive.style.filter = 'blur(10px)';
+                setTimeout(() => {
+                    currentActive.classList.remove('active');
+                    showTarget();
+                }, 300);
+            } else {
+                showTarget();
             }
 
-            renderCatalog(filteredItems);
+            function showTarget() {
+                if(targetPage) {
+                    targetPage.classList.add('active');
+                    targetPage.offsetHeight; // Forzar reflow
+                    setTimeout(() => {
+                        targetPage.style.opacity = '1';
+                        targetPage.style.transform = 'scale(1) translateY(0)';
+                        targetPage.style.filter = 'blur(0)';
+                    }, 50);
+                    targetPage.querySelectorAll('.reveal-up, .reveal-curtain').forEach(el => el.classList.remove('active'));
+                    setTimeout(() => setupReveals(), 200);
+                }
+            }
+
+            if(pageId === 'catalog') {
+                filterCatalog(subCategory || 'tour');
+            }
+
+            // Sincronizar clases activas del menú de navegación
+            document.querySelectorAll('.nav-bar .nav-btn').forEach(link => {
+                const isCatalog = pageId === 'catalog' && link.id === 'btn-nav-catalog';
+                const isCurrent = link.id === `btn-nav-${pageId}` || isCatalog;
+                link.classList.toggle('active', isCurrent);
+                
+                if (isCurrent) {
+                    link.classList.add('text-brand-accent');
+                    link.classList.remove('text-white/70');
+                } else {
+                    link.classList.remove('text-brand-accent');
+                    link.classList.add('text-white/70');
+                }
+            });
         }
 
-        function getNumericPrice(priceStr) {
-            if (!priceStr) return 999999999;
-            const cleaned = priceStr.replace(/[^\d]/g, '');
-            return cleaned ? parseInt(cleaned) : 999999999;
-        }
-
-        function resetFilters() {
-            document.getElementById("filterTorre").value = "all";
-            document.getElementById("filterRecamaras").value = "all";
-            document.getElementById("filterVistas").value = "all";
-            document.getElementById("filterDisponibilidad").value = "all";
-            document.getElementById("searchBar").value = "";
-            document.getElementById("sortOrder").value = "default";
-            applyFilters();
-        }
-
-        function toggleUrlSettings() {
-            const panel = document.getElementById("urlSettingsPanel");
-            panel.classList.toggle("hidden");
-        }
-
-        function saveTsvUrl() {
-            const val = document.getElementById("inputTsvUrl").value.trim();
-            if (val) {
-                tsvUrl = val;
-                localStorage.setItem("nautica_tsv_url", val);
-                toggleUrlSettings();
-                fetchInventoryData();
+        /* MANEJO DE DESPLEGABLE DE CATÁLOGO */
+        function toggleCatalogDropdown(event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('catalog-dropdown-menu');
+            const isOpen = !menu.classList.contains('opacity-0');
+            if (isOpen) {
+                closeCatalogDropdown();
+            } else {
+                menu.classList.remove('opacity-0', 'invisible');
+                menu.classList.add('opacity-100', 'visible');
             }
         }
 
-        function openModal(indexInFiltered) {
-            const item = filteredItems[indexInFiltered];
+        function closeCatalogDropdown() {
+            const menu = document.getElementById('catalog-dropdown-menu');
+            if (menu) {
+                menu.classList.add('opacity-0', 'invisible');
+                menu.classList.remove('opacity-100', 'visible');
+            }
+        }
+
+        function selectCatalogSubCategory(category, event) {
+            if (event) event.stopPropagation();
+            closeCatalogDropdown();
+            navigateTo('catalog', category);
+        }
+
+        document.addEventListener('click', () => {
+            closeCatalogDropdown();
+        });
+
+        // MODAL DE DETALLE PREMIUM COHERENTE CON REQUISITOS
+        function openDetailModal(nombreBusqueda) {
+            const item = fullData.find(i => getCleanValue(i, ['Nombre', 'NOMBRE']) === nombreBusqueda);
             if (!item) return;
 
-            document.getElementById("modalUnitTitle").innerText = `Unidad ${item.unit}`;
-            document.getElementById("modalTorreBadge").innerText = item.source;
-            document.getElementById("modalRecamaras").innerText = getBedroomsCategory(item.typology);
-            document.getElementById("modalM2").innerText = item.m2 ? `${item.m2} m²` : 'Por registrar';
-            document.getElementById("modalTipo").innerText = item.typology;
-            document.getElementById("modalModelo").innerText = item.model;
-            document.getElementById("modalVista").innerText = item.view;
-            document.getElementById("modalOrientacion").innerText = item.orientation;
+            const modal = document.getElementById('activity-detail-modal');
+            const img = document.getElementById('detail-modal-img');
+            const title = document.getElementById('detail-modal-title');
+            const price = document.getElementById('detail-modal-price');
+            const desc = document.getElementById('detail-modal-desc');
+            const includes = document.getElementById('detail-modal-includes');
+            const includesSection = document.getElementById('detail-modal-includes-section');
+            const specsContainer = document.getElementById('detail-modal-specs');
+            const reserveBtn = document.getElementById('detail-modal-reserve-btn');
+            const imgContainer = document.getElementById('detail-img-container');
+
+            let folioValue = getCleanValue(item, ['Folio', 'folio', 'FOLIO']);
+            let imgUrl = getImgUrlByFolio(folioValue);
+            img.src = imgUrl;
+            img.onerror = function() { handleImgError(this, 'general'); };
+
+            imgContainer.onclick = function() {
+                openZoomModal(img.src);
+            };
+
+            title.innerText = getCleanValue(item, ['Nombre', 'NOMBRE']);
             
-            const priceFormatted = item.price && item.price.trim() !== "" ? `${item.price} MXN` : (item.availability === "RESERVADO" ? "Unidad Reservada" : "Unidad Vendida");
-            document.getElementById("modalPrecio").innerText = priceFormatted;
+            let precio = getCleanValue(item, ['Precio', 'PRECIO']);
+            price.innerText = (precio === '' || precio.toLowerCase() === 'consultar') ? 'Consulte con su Concierge' : precio;
 
-            const dispoBadge = document.getElementById("modalDispoBadge");
-            if (item.availability === "SI") {
-                dispoBadge.innerText = "Disponible";
-                dispoBadge.className = "bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
-            } else if (item.availability === "RESERVADO") {
-                dispoBadge.innerText = "Reservada";
-                dispoBadge.className = "bg-amber-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
+            let descriptivo = getCleanValue(item, ['Descriptivo', 'Detalles']);
+            desc.innerText = descriptivo || 'Ficha de experiencia de lujo a medida disponible bajo solicitud de nuestro concierge especializado.';
+
+            let incluye = getCleanValue(item, ['Incluye:', 'Incluye', 'INCLUYE']);
+            if (incluye) {
+                includesSection.style.display = 'block';
+                includes.innerText = incluye;
             } else {
-                dispoBadge.innerText = "Vendida / No Disponible";
-                dispoBadge.className = "bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
+                includesSection.style.display = 'none';
             }
 
-            const layoutContainer = document.getElementById("modalLayoutRender");
-            layoutContainer.innerHTML = generateDynamicFloorPlanSVG(item);
-
-            const agentPhone = "529988433239";
-            const msg = encodeURIComponent(`Hola, me interesa solicitar más información sobre la propiedad Nautica Residences:\n\n*Torre*: ${item.source}\n*Unidad*: ${item.unit}\n*Modelo*: ${item.model}\n*Precio*: ${priceFormatted}\n*Recámaras*: ${item.typology}\n*Superficie*: ${item.m2} m²`);
-            document.getElementById("contactAgentBtn").setAttribute("href", `https://wa.me/${agentPhone}?text=${msg}`);
-
-            const modal = document.getElementById("unitModal");
-            modal.classList.remove("hidden");
-            document.body.classList.add("overflow-hidden");
-
-            lucide.createIcons();
-        }
-
-        function closeModal() {
-            const modal = document.getElementById("unitModal");
-            modal.classList.add("hidden");
-            document.body.classList.remove("overflow-hidden");
-        }
-
-        function generateDynamicFloorPlanSVG(item) {
-            const numRecs = getBedroomsCategory(item.typology);
-            let innerRooms = "";
-
-            if (numRecs.includes("1")) {
-                innerRooms = `
-                    <rect x="20" y="20" width="160" height="110" fill="none" stroke="#c5a880" stroke-width="1.5" stroke-dasharray="4,4"/>
-                    <text x="100" y="75" font-family="Montserrat" font-size="9" font-weight="bold" fill="#c5a880" text-anchor="middle">Máster Suite</text>
-                    <line x1="180" y1="20" x2="260" y2="130" stroke="#cbd5e1" stroke-width="1.5"/>
-                    <text x="230" y="75" font-family="Montserrat" font-size="9" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Estancia / Terraza</text>
-                `;
-            } else if (numRecs.includes("2")) {
-                innerRooms = `
-                    <rect x="20" y="20" width="110" height="110" fill="none" stroke="#c5a880" stroke-width="1.5" stroke-dasharray="4,4"/>
-                    <text x="75" y="75" font-family="Montserrat" font-size="9" font-weight="bold" fill="#c5a880" text-anchor="middle">Máster Suite</text>
-                    <rect x="130" y="20" width="110" height="110" fill="none" stroke="#c5a880" stroke-width="1.5" stroke-dasharray="4,4"/>
-                    <text x="185" y="75" font-family="Montserrat" font-size="9" font-weight="bold" fill="#c5a880" text-anchor="middle">Recámara 2</text>
-                    <rect x="240" y="20" width="100" height="110" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
-                    <text x="290" y="75" font-family="Montserrat" font-size="9" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Estancia</text>
-                `;
-            } else {
-                innerRooms = `
-                    <rect x="15" y="15" width="90" height="120" fill="none" stroke="#c5a880" stroke-width="1.5" stroke-dasharray="4,4"/>
-                    <text x="60" y="75" font-family="Montserrat" font-size="8" font-weight="bold" fill="#c5a880" text-anchor="middle">Máster</text>
-                    <rect x="105" y="15" width="80" height="120" fill="none" stroke="#c5a880" stroke-width="1.5" stroke-dasharray="4,4"/>
-                    <text x="145" y="75" font-family="Montserrat" font-size="8" font-weight="bold" fill="#c5a880" text-anchor="middle">Recámara 2</text>
-                    <rect x="185" y="15" width="80" height="120" fill="none" stroke="#c5a880" stroke-width="1.5" stroke-dasharray="4,4"/>
-                    <text x="225" y="75" font-family="Montserrat" font-size="8" font-weight="bold" fill="#c5a880" text-anchor="middle">Recámara 3</text>
-                    <rect x="265" y="15" width="80" height="120" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
-                    <text x="305" y="75" font-family="Montserrat" font-size="8" font-weight="bold" fill="#cbd5e1" text-anchor="middle">Estancia</text>
-                `;
+            specsContainer.innerHTML = '';
+            const excludedHeaders = ['nombre', 'codigo', 'tipo', 'precio', 'descriptivo', 'detalles', 'incluye', 'catalogo', 'folio', 'pax'];
+            for (let originalKey in item) {
+                let keyNormalized = originalKey.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9_]/g, '').trim();
+                let val = getCleanValue(item, [originalKey]); 
+                if (val && val !== '' && !excludedHeaders.includes(keyNormalized)) {
+                    let cleanLabel = originalKey.trim().replace(/:$/, '');
+                    specsContainer.insertAdjacentHTML('beforeend', `
+                        <div class="flex justify-between text-xs py-1 border-b border-white/10">
+                            <span class="font-bold text-brand-accent uppercase tracking-wider text-[10px]">${cleanLabel}:</span>
+                            <span class="text-slate-300 text-right">${val}</span>
+                        </div>
+                    `);
+                }
             }
 
-            return `
-                <svg width="100%" height="150" viewBox="0 0 360 150" class="text-slate-400">
-                    <rect x="5" y="5" width="350" height="140" rx="10" fill="none" stroke="#c5a880" stroke-width="2"/>
-                    ${innerRooms}
-                </svg>
-            `;
+            reserveBtn.onclick = function() {
+                openWhatsApp(`Hola Concierge. Deseo agendar y cotizar la experiencia de: ${title.innerText}.`);
+            };
+
+            modal.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+            modal.style.opacity = '0';
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.offsetHeight; // Forzar reflow
+            modal.style.opacity = '1';
+            document.body.classList.add('no-scroll');
         }
+
+        function closeDetailModal() {
+            const modal = document.getElementById('activity-detail-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                document.body.classList.remove('no-scroll');
+            }, 400);
+        }
+
+        // SISTEMA INTERACTIVO DE ZOOM LIGHTBOX
+        function openZoomModal(imgSrc, event) {
+            if (event) { event.stopPropagation(); }
+            const modal = document.getElementById('image-zoom-modal');
+            const img = document.getElementById('zoom-modal-img');
+            
+            img.src = imgSrc;
+            img.onerror = function() { handleImgError(img, 'general'); };
+
+            modal.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+            modal.style.opacity = '0';
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.offsetHeight; // Forzar reflow
+            modal.style.opacity = '1';
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeZoomModal() {
+            const modal = document.getElementById('image-zoom-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                const detailModal = document.getElementById('activity-detail-modal');
+                if (detailModal.classList.contains('pointer-events-none')) {
+                    document.body.classList.remove('no-scroll');
+                }
+                resetZoomImage();
+            }, 400);
+        }
+
+        // Control del zoom interactivo
+        function zoomImage(e) {
+            const container = document.getElementById('zoom-container');
+            const img = document.getElementById('zoom-modal-img');
+            const rect = container.getBoundingClientRect();
+            
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const xPercent = (x / rect.width) * 100;
+            const yPercent = (y / rect.height) * 100;
+            
+            img.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+            img.style.transform = "scale(2.2)";
+        }
+
+        function resetZoomImage() {
+            const img = document.getElementById('zoom-modal-img');
+            img.style.transform = "scale(1)";
+            img.style.transformOrigin = "center center";
+        }
+
+        // CONEXIÓN CON WHATSAPP
+        function openWhatsApp(message) {
+            trackConversion('Click_WhatsApp', { intent: message });
+            const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('f_name').value;
+            const people = document.getElementById('f_people').value;
+            const destinos = document.getElementById('f_destinos').value || 'Varios de tu colección';
+            trackConversion('Form_Submit', { name, size: people });
+            openWhatsApp(`Hola Concierge de Amazing Colors, mi nombre es ${name}. Estaremos viajando un grupo de: ${people}. Nos encantaría cotizar el itinerario de: ${destinos}.`);
+        }
+
+        // CONFIGURAR REVEAL ON SCROLL
+        function setupReveals() {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            const activePage = document.querySelector('.page-view.active');
+            if(activePage) {
+                activePage.querySelectorAll('.reveal-up:not(.active), .reveal-curtain:not(.active)').forEach(el => observer.observe(el));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+
+            // Atajar la ruta inicial si contiene fragmentos de hash
+            const hash = window.location.hash.replace('#', '');
+            const validPages = ['home', 'legacy', 'catalog', 'contact'];
+            
+            let initialPage = 'home';
+            let initialSub = '';
+            
+            if (hash) {
+                if (hash.startsWith('catalog-')) {
+                    initialPage = 'catalog';
+                    initialSub = hash.replace('catalog-', '');
+                } else if (validPages.includes(hash)) {
+                    initialPage = hash;
+                }
+            }
+            
+            document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+            navigateTo(initialPage, initialSub);
+        });
     </script>
 </body>
 </html>
