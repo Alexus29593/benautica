@@ -75,8 +75,8 @@
     <!-- Brand Header Area (Solid Navy & Centered Typography matching the reference screenshot) -->
     <header class="w-full bg-nautica-900 pt-8 pb-7 flex flex-col items-center justify-center relative">
         <div class="flex flex-col items-center">
-            <!-- Dynamic Brand Logo Integration with secure fallback -->
-            <img id="brandLogo" src="NAUTT.png" alt="NAUTICA Residences" class="h-16 w-auto object-contain mb-2 transition-opacity duration-300" onerror="handleLogoError()">
+            <!-- Dynamic Brand Logo Integration with secure fallback and white color filter -->
+            <img id="brandLogo" src="NAUTT.png" alt="NAUTICA Residences" class="h-16 w-auto object-contain mb-2 transition-opacity duration-300" style="filter: brightness(0) invert(1);" onerror="handleLogoError()">
             <!-- Typography Fallback if the logo doesn't exist locally -->
             <div id="textLogoFallback" class="hidden flex flex-col items-center">
                 <span class="text-2xl sm:text-3xl font-serif font-bold tracking-[0.25em] text-white block">NAUTICA RESIDENCES</span>
@@ -417,9 +417,14 @@
         }
 
         function fetchInventoryData() {
-            document.getElementById("loader").classList.remove("hidden");
-            document.getElementById("unitGrid").classList.add("hidden");
-            document.getElementById("emptyState").classList.add("hidden");
+            const loader = document.getElementById("loader");
+            if (loader) loader.classList.remove("hidden");
+            
+            const grid = document.getElementById("unitGrid");
+            if (grid) grid.classList.add("hidden");
+            
+            const emptyState = document.getElementById("emptyState");
+            if (emptyState) emptyState.classList.add("hidden");
 
             fetch(tsvUrl)
                 .then(response => {
@@ -430,7 +435,7 @@
                     try {
                         parseTsvData(text);
                     } catch (parseError) {
-                        console.error("Parser issue:", parseError);
+                        console.error("Parser issue, falling back:", parseError);
                         useLocalFallback();
                     }
                 })
@@ -539,30 +544,39 @@
         }
 
         function processInventoryAndBuildFilters() {
-            document.getElementById("loader").classList.add("hidden");
-            document.getElementById("unitGrid").classList.remove("hidden");
+            const loader = document.getElementById("loader");
+            if (loader) loader.classList.add("hidden");
+            
+            const grid = document.getElementById("unitGrid");
+            if (grid) grid.classList.remove("hidden");
 
             const torres = [...new Set(inventoryData.map(item => item.source))].filter(Boolean);
             const recamaras = [...new Set(inventoryData.map(item => getBedroomsCategory(item.typology)))].filter(Boolean);
             const vistas = [...new Set(inventoryData.map(item => item.view))].filter(Boolean);
 
             const filterTorre = document.getElementById("filterTorre");
-            filterTorre.innerHTML = '<option value="all">Todas las Torres</option>';
-            torres.forEach(t => {
-                filterTorre.innerHTML += `<option value="${t}">${t}</option>`;
-            });
+            if (filterTorre) {
+                filterTorre.innerHTML = '<option value="all">Todas las Torres</option>';
+                torres.forEach(t => {
+                    filterTorre.innerHTML += `<option value="${t}">${t}</option>`;
+                });
+            }
 
             const filterRecamaras = document.getElementById("filterRecamaras");
-            filterRecamaras.innerHTML = '<option value="all">Todas las Recámaras</option>';
-            recamaras.sort().forEach(r => {
-                filterRecamaras.innerHTML += `<option value="${r}">${r}</option>`;
-            });
+            if (filterRecamaras) {
+                filterRecamaras.innerHTML = '<option value="all">Todas las Recámaras</option>';
+                recamaras.sort().forEach(r => {
+                    filterRecamaras.innerHTML += `<option value="${r}">${r}</option>`;
+                });
+            }
 
             const filterVistas = document.getElementById("filterVistas");
-            filterVistas.innerHTML = '<option value="all">Todas las Vistas</option>';
-            vistas.forEach(v => {
-                filterVistas.innerHTML += `<option value="${v}">${v}</option>`;
-            });
+            if (filterVistas) {
+                filterVistas.innerHTML = '<option value="all">Todas las Vistas</option>';
+                vistas.forEach(v => {
+                    filterVistas.innerHTML += `<option value="${v}">${v}</option>`;
+                });
+            }
 
             setupPriceSliderRange();
             calculateOverviewStats(inventoryData);
@@ -582,14 +596,17 @@
             });
 
             const slider = document.getElementById("priceSlider");
-            slider.min = minPrice;
-            slider.max = maxPrice;
-            slider.value = maxPrice;
+            if (slider) {
+                slider.min = minPrice;
+                slider.max = maxPrice;
+                slider.value = maxPrice;
+            }
             handlePriceSliderChange(maxPrice);
         }
 
         function handlePriceSliderChange(val) {
-            document.getElementById("priceDisplayValue").innerText = `$${parseInt(val).toLocaleString()}`;
+            const display = document.getElementById("priceDisplayValue");
+            if (display) display.innerText = `$${parseInt(val).toLocaleString()}`;
             applyFilters();
         }
 
@@ -603,7 +620,6 @@
             return typologyStr;
         }
 
-        // Calculates dynamic metrics corresponding to the live/local database structure
         function calculateOverviewStats(dataList) {
             const total = dataList.length;
             const available = dataList.filter(item => item.availability === "SI").length;
@@ -616,15 +632,14 @@
             const soldB = dataList.filter(item => item.source === "Torre B" && item.availability !== "SI").length;
             const pctB = totalB > 0 ? ((soldB / totalB) * 100).toFixed(1) : "0.0";
 
-            document.getElementById("pillsVentasA").innerText = `${soldA} de ${totalA} (${pctA}%)`;
-            document.getElementById("pillsVentasB").innerText = `${soldB} de ${totalB} (${pctB}%)`;
-            document.getElementById("pillsDispo").innerText = `${available} de ${total}`;
-            
-            document.getElementById("statTotal").innerText = total;
-            document.getElementById("statAvailable").innerText = available;
-            document.getElementById("statReserved").innerText = dataList.filter(item => item.availability === "RESERVADO").length;
-            document.getElementById("statSold").innerText = dataList.filter(item => item.availability === "VENDIDO").length;
-            document.getElementById("statPercent").innerText = total > 0 ? Math.round((available / total) * 100) + "%" : "0%";
+            const pillsVentasA = document.getElementById("pillsVentasA");
+            if (pillsVentasA) pillsVentasA.innerText = `${soldA} de ${totalA} (${pctA}%)`;
+
+            const pillsVentasB = document.getElementById("pillsVentasB");
+            if (pillsVentasB) pillsVentasB.innerText = `${soldB} de ${totalB} (${pctB}%)`;
+
+            const pillsDispo = document.getElementById("pillsDispo");
+            if (pillsDispo) pillsDispo.innerText = `${available} de ${total}`;
         }
 
         function renderCatalog(items) {
@@ -632,104 +647,104 @@
             const emptyState = document.getElementById("emptyState");
             
             if (items.length === 0) {
-                grid.innerHTML = "";
-                emptyState.classList.remove("hidden");
-                document.getElementById("filteredCount").innerText = "0 unidades";
+                if (grid) grid.innerHTML = "";
+                if (emptyState) emptyState.classList.remove("hidden");
                 return;
             }
 
-            emptyState.classList.add("hidden");
-            document.getElementById("filteredCount").innerText = `${items.length} unidad${items.length > 1 ? 'es' : ''}`;
+            if (emptyState) emptyState.classList.add("hidden");
 
-            grid.innerHTML = items.map((unit, index) => {
-                const status = unit.availability;
-                let bgStyle = "bg-white border-slate-200 hover:border-gold-500 hover:shadow-xl";
-                let textStyle = "text-slate-950";
-                let descStyle = "text-slate-500";
-                let badgeMarkup = "";
+            if (grid) {
+                grid.innerHTML = items.map((unit, index) => {
+                    const status = unit.availability;
+                    let bgStyle = "bg-white border-slate-200 hover:border-gold-500 hover:shadow-xl";
+                    let textStyle = "text-slate-950";
+                    let descStyle = "text-slate-500";
+                    let badgeMarkup = "";
 
-                // Color mappings: Blanco = Disponible, Amarillo = Reservado (No dispo), Rojo = Vendido (No dispo)
-                if (status === "SI") {
-                    bgStyle = "bg-white border-slate-200 hover:shadow-2xl hover:border-gold-500";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-slate-100 text-slate-800 border border-slate-200">
-                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500"></span>
-                                     Disponible
-                                   </span>`;
-                } else if (status === "RESERVADO") {
-                    bgStyle = "bg-amber-50 border-amber-300";
-                    textStyle = "text-amber-950";
-                    descStyle = "text-amber-800";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-amber-200 text-amber-900 border border-amber-300">
-                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500"></span>
-                                     Reservada
-                                   </span>`;
-                } else {
-                    bgStyle = "bg-rose-50 border-rose-300";
-                    textStyle = "text-rose-950";
-                    descStyle = "text-rose-800";
-                    badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-rose-200 text-rose-900 border border-rose-300">
-                                     <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-rose-500"></span>
-                                     No Disponible
-                                   </span>`;
-                }
+                    // Color mappings: Blanco = Disponible, Amarillo = Reservado, Rojo = Vendido
+                    if (status === "SI") {
+                        bgStyle = "bg-white border-slate-200 hover:shadow-2xl hover:border-gold-500";
+                        badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-slate-100 text-slate-800 border border-slate-200">
+                                         <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500"></span>
+                                         Disponible
+                                       </span>`;
+                    } else if (status === "RESERVADO") {
+                        bgStyle = "bg-amber-50 border-amber-300";
+                        textStyle = "text-amber-950";
+                        descStyle = "text-amber-800";
+                        badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-amber-200 text-amber-900 border border-amber-300">
+                                         <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500"></span>
+                                         Reservada
+                                       </span>`;
+                    } else {
+                        bgStyle = "bg-rose-50 border-rose-300";
+                        textStyle = "text-rose-950";
+                        descStyle = "text-rose-800";
+                        badgeMarkup = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase bg-rose-200 text-rose-900 border border-rose-300">
+                                         <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-rose-500"></span>
+                                         No Disponible
+                                       </span>`;
+                    }
 
-                const priceFormatted = unit.price && unit.price.trim() !== "" ? unit.price : (status === "RESERVADO" ? "Precio en Reserva" : "Vendido");
-                
-                // Construct clean model image path based on model names from the sheet
-                const cleanModel = unit.model.trim().toUpperCase().replace(/\s+/g, '-');
-                const imagePathPng = `${cleanModel}.png`;
-                const imagePathJpg = `${cleanModel}.jpg`;
+                    const priceFormatted = unit.price && unit.price.trim() !== "" ? unit.price : (status === "RESERVADO" ? "Precio en Reserva" : "Vendido");
+                    
+                    // Construct clean model image path based on model names from the sheet
+                    const cleanModel = unit.model.trim().toUpperCase().replace(/\s+/g, '-');
+                    const imagePathPng = `${cleanModel}.png`;
+                    const imagePathJpg = `${cleanModel}.jpg`;
 
-                return `
-                    <div onclick="openModal(${index})" class="border rounded-3xl p-6 transition-all duration-300 flex flex-col justify-between group ${bgStyle} cursor-pointer hover:-translate-y-1">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-[9px] font-bold px-2.5 py-1 rounded bg-nautica-900 text-gold-500 tracking-widest uppercase">${unit.source}</span>
-                                ${badgeMarkup}
-                            </div>
+                    return `
+                        <div onclick="openModal(${index})" class="border rounded-3xl p-6 transition-all duration-300 flex flex-col justify-between group ${bgStyle} cursor-pointer hover:-translate-y-1">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-[9px] font-bold px-2.5 py-1 rounded bg-nautica-900 text-gold-500 tracking-widest uppercase">${unit.source}</span>
+                                    ${badgeMarkup}
+                                </div>
 
-                            <!-- Elegant Unit Rendering Space with dynamic fallback -->
-                            <div class="relative w-full h-44 mb-4 rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center border border-slate-200">
-                                <img src="${imagePathPng}" alt="Plano ${unit.model}" 
-                                     class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" 
-                                     onerror="this.onerror=null; this.src='${imagePathJpg}'; this.onerror=function(){ this.style.display='none'; this.nextElementSibling.classList.remove('hidden'); }">
-                                <div class="hidden absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-slate-50">
-                                    <i data-lucide="home" class="w-8 h-8 text-gold-500/40 mb-2"></i>
-                                    <span class="text-[10px] font-serif text-slate-500 tracking-wider uppercase">Modelo ${unit.model}</span>
+                                <!-- Elegant Unit Rendering Space with dynamic fallback -->
+                                <div class="relative w-full h-44 mb-4 rounded-2xl overflow-hidden bg-slate-50 flex items-center justify-center border border-slate-200">
+                                    <img src="${imagePathPng}" alt="Plano ${unit.model}" 
+                                         class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" 
+                                         onerror="this.onerror=null; this.src='${imagePathJpg}'; this.onerror=function(){ this.style.display='none'; this.nextElementSibling.classList.remove('hidden'); }">
+                                    <div class="hidden absolute inset-0 flex flex-col items-center justify-center p-4 text-center bg-slate-50">
+                                        <i data-lucide="home" class="w-8 h-8 text-gold-500/40 mb-2"></i>
+                                        <span class="text-[10px] font-serif text-slate-500 tracking-wider uppercase">Modelo ${unit.model}</span>
+                                    </div>
+                                </div>
+                                
+                                <h4 class="text-2xl font-serif tracking-wide ${textStyle}">Unidad ${unit.unit}</h4>
+                                <p class="text-xs ${descStyle} font-light tracking-widest mb-4 uppercase">Modelo: ${unit.model}</p>
+                                
+                                <div class="grid grid-cols-2 gap-2 mb-4">
+                                    <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
+                                        <i data-lucide="bed" class="w-3.5 h-3.5 text-gold-600"></i>
+                                        <span class="text-[10px] font-bold ${textStyle}">${getBedroomsCategory(unit.typology)}</span>
+                                    </div>
+                                    <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
+                                        <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-gold-600"></i>
+                                        <span class="text-[10px] font-bold ${textStyle}">${unit.m2 ? unit.m2 + ' m²' : 'N/D'}</span>
+                                    </div>
+                                    <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2 col-span-2">
+                                        <i data-lucide="eye" class="w-3.5 h-3.5 text-gold-600"></i>
+                                        <span class="text-[10px] font-bold truncate ${textStyle}">Vista: ${unit.view} (${unit.orientation})</span>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <h4 class="text-2xl font-serif tracking-wide ${textStyle}">Unidad ${unit.unit}</h4>
-                            <p class="text-xs ${descStyle} font-light tracking-widest mb-4 uppercase">Modelo: ${unit.model}</p>
-                            
-                            <div class="grid grid-cols-2 gap-2 mb-4">
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
-                                    <i data-lucide="bed" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold ${textStyle}">${getBedroomsCategory(unit.typology)}</span>
+
+                            <div class="border-t border-slate-200/80 pt-4 mt-2 flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-[8px] font-bold uppercase tracking-widest ${descStyle}">Inversión</span>
+                                    <span class="text-lg font-serif font-semibold ${textStyle}">${priceFormatted}</span>
                                 </div>
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2">
-                                    <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold ${textStyle}">${unit.m2 ? unit.m2 + ' m²' : 'N/D'}</span>
-                                </div>
-                                <div class="bg-black/5 p-2 rounded-xl flex items-center space-x-2 col-span-2">
-                                    <i data-lucide="eye" class="w-3.5 h-3.5 text-gold-600"></i>
-                                    <span class="text-[10px] font-bold truncate ${textStyle}">Vista: ${unit.view} (${unit.orientation})</span>
-                                </div>
+                                <button class="p-2.5 rounded-full bg-nautica-900 text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all shadow-md active:scale-95">
+                                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </button>
                             </div>
                         </div>
-
-                        <div class="border-t border-slate-200/80 pt-4 mt-2 flex items-center justify-between">
-                            <div class="flex flex-col">
-                                <span class="text-[8px] font-bold uppercase tracking-widest ${descStyle}">Inversión</span>
-                                <span class="text-lg font-serif font-semibold ${textStyle}">${priceFormatted}</span>
-                            </div>
-                            <button class="p-2.5 rounded-full bg-nautica-900 text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all shadow-md active:scale-95">
-                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
 
             lucide.createIcons();
         }
@@ -741,37 +756,34 @@
             const btnDesc = document.getElementById("sortDesc");
 
             if (order === 'asc') {
-                btnAsc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-white bg-nautica-900";
-                btnDesc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-slate-700 bg-white";
+                if (btnAsc) btnAsc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-white bg-nautica-900";
+                if (btnDesc) btnDesc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-slate-700 bg-white";
             } else {
-                btnAsc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-slate-700 bg-white";
-                btnDesc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-white bg-nautica-900";
+                if (btnAsc) btnAsc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-slate-700 bg-white";
+                if (btnDesc) btnDesc.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all uppercase tracking-wider text-white bg-nautica-900";
             }
             applyFilters();
         }
 
         function applyFilters() {
-            const selectTorre = document.getElementById("filterTorre").value;
-            const selectRecamaras = document.getElementById("filterRecamaras").value;
-            const selectVistas = document.getElementById("filterVistas").value;
-            const selectDisponibilidad = document.getElementById("filterDisponibilidad").value;
-            const selectMaxPrice = parseInt(document.getElementById("priceSlider").value);
-            const query = document.getElementById("searchBar").value.toLowerCase().trim();
+            // Safeguarded DOM reads to ensure JS never crashes if elements are re-styled or temporarily absent
+            const filterTorre = document.getElementById("filterTorre");
+            const filterRecamaras = document.getElementById("filterRecamaras");
+            const filterVistas = document.getElementById("filterVistas");
+            const priceSlider = document.getElementById("priceSlider");
+            const searchBar = document.getElementById("searchBar");
+
+            const selectTorre = filterTorre ? filterTorre.value : "all";
+            const selectRecamaras = filterRecamaras ? filterRecamaras.value : "all";
+            const selectVistas = filterVistas ? filterVistas.value : "all";
+            const selectMaxPrice = priceSlider ? parseInt(priceSlider.value) : 25000000;
+            const query = searchBar ? searchBar.value.toLowerCase().trim() : "";
 
             filteredItems = inventoryData.filter(item => {
                 const passTorre = selectTorre === "all" || item.source === selectTorre;
                 const passRecamaras = selectRecamaras === "all" || getBedroomsCategory(item.typology) === selectRecamaras;
                 const passVistas = selectVistas === "all" || item.view === selectVistas;
                 
-                let passDispo = true;
-                if (selectDisponibilidad === "available") {
-                    passDispo = item.availability === "SI";
-                } else if (selectDisponibilidad === "reserved") {
-                    passDispo = item.availability === "RESERVADO";
-                } else if (selectDisponibilidad === "sold") {
-                    passDispo = item.availability === "VENDIDO";
-                }
-
                 // Max price range logic
                 const itemPrice = getNumericPrice(item.price);
                 const passPrice = itemPrice === 999999999 || itemPrice <= selectMaxPrice;
@@ -785,7 +797,7 @@
                                 item.orientation.toLowerCase().includes(query);
                 }
 
-                return passTorre && passRecamaras && passVistas && passDispo && passPrice && passQuery;
+                return passTorre && passRecamaras && passVistas && passPrice && passQuery;
             });
 
             if (sortOrder === "asc") {
@@ -804,16 +816,25 @@
         }
 
         function resetFilters() {
-            document.getElementById("filterTorre").value = "all";
-            document.getElementById("filterRecamaras").value = "all";
-            document.getElementById("filterVistas").value = "all";
-            document.getElementById("filterDisponibilidad").value = "all";
-            document.getElementById("searchBar").value = "";
+            const filterTorre = document.getElementById("filterTorre");
+            if (filterTorre) filterTorre.value = "all";
+
+            const filterRecamaras = document.getElementById("filterRecamaras");
+            if (filterRecamaras) filterRecamaras.value = "all";
+
+            const filterVistas = document.getElementById("filterVistas");
+            if (filterVistas) filterVistas.value = "all";
+
+            const searchBar = document.getElementById("searchBar");
+            if (searchBar) searchBar.value = "";
+
             toggleSort('desc');
             
             const slider = document.getElementById("priceSlider");
-            slider.value = slider.max;
-            handlePriceSliderChange(slider.max);
+            if (slider) {
+                slider.value = slider.max;
+                handlePriceSliderChange(slider.max);
+            }
         }
 
         // HTML2Canvas high CORS high-fidelity screen exporter
@@ -822,10 +843,11 @@
             const btnText = document.getElementById("captureBtnText");
             const btnIcon = document.getElementById("captureBtnIcon");
             
-            // Loading State UI update
-            btnText.innerText = "Tomando captura...";
-            btnIcon.setAttribute("data-lucide", "loader-2");
-            btnIcon.classList.add("animate-spin");
+            if (btnText) btnText.innerText = "Tomando captura...";
+            if (btnIcon) {
+                btnIcon.setAttribute("data-lucide", "loader-2");
+                btnIcon.classList.add("animate-spin");
+            }
             lucide.createIcons();
 
             setTimeout(() => {
@@ -837,21 +859,26 @@
                 }).then(canvas => {
                     const imgData = canvas.toDataURL("image/png");
                     const link = document.createElement("a");
-                    const unitTitle = document.getElementById("modalUnitTitle").innerText;
+                    const titleElement = document.getElementById("modalUnitTitle");
+                    const unitTitle = titleElement ? titleElement.innerText : "Ficha";
                     link.download = `Nautica_Ficha_${unitTitle.replace(/\s+/g, '_')}.png`;
                     link.href = imgData;
                     link.click();
                     
                     // Reset Button UI State
-                    btnText.innerText = "Descargar Ficha Técnica";
-                    btnIcon.setAttribute("data-lucide", "download");
-                    btnIcon.classList.remove("animate-spin");
+                    if (btnText) btnText.innerText = "Descargar Ficha Técnica";
+                    if (btnIcon) {
+                        btnIcon.setAttribute("data-lucide", "download");
+                        btnIcon.classList.remove("animate-spin");
+                    }
                     lucide.createIcons();
                 }).catch(err => {
                     console.error("Screenshot error: ", err);
-                    btnText.innerText = "Error al exportar";
-                    btnIcon.setAttribute("data-lucide", "alert-triangle");
-                    btnIcon.classList.remove("animate-spin");
+                    if (btnText) btnText.innerText = "Error al exportar";
+                    if (btnIcon) {
+                        btnIcon.setAttribute("data-lucide", "alert-triangle");
+                        btnIcon.classList.remove("animate-spin");
+                    }
                     lucide.createIcons();
                 });
             }, 300);
@@ -861,35 +888,53 @@
             const item = filteredItems[indexInFiltered];
             if (!item) return;
 
-            document.getElementById("modalUnitTitle").innerText = `Unidad ${item.unit}`;
-            document.getElementById("modalTorreBadge").innerText = item.source;
-            document.getElementById("modalRecamaras").innerText = getBedroomsCategory(item.typology);
-            document.getElementById("modalM2").innerText = item.m2 ? `${item.m2} m²` : 'Por registrar';
-            document.getElementById("modalTipo").innerText = item.typology;
-            document.getElementById("modalModelo").innerText = item.model;
-            document.getElementById("modalVista").innerText = item.view;
-            document.getElementById("modalOrientacion").innerText = item.orientation;
+            const modalUnitTitle = document.getElementById("modalUnitTitle");
+            if (modalUnitTitle) modalUnitTitle.innerText = `Unidad ${item.unit}`;
+
+            const modalTorreBadge = document.getElementById("modalTorreBadge");
+            if (modalTorreBadge) modalTorreBadge.innerText = item.source;
+
+            const modalRecamaras = document.getElementById("modalRecamaras");
+            if (modalRecamaras) modalRecamaras.innerText = getBedroomsCategory(item.typology);
+
+            const modalM2 = document.getElementById("modalM2");
+            if (modalM2) modalM2.innerText = item.m2 ? `${item.m2} m²` : 'Por registrar';
+
+            const modalTipo = document.getElementById("modalTipo");
+            if (modalTipo) modalTipo.innerText = item.typology;
+
+            const modalModelo = document.getElementById("modalModelo");
+            if (modalModelo) modalModelo.innerText = item.model;
+
+            const modalVista = document.getElementById("modalVista");
+            if (modalVista) modalVista.innerText = item.view;
+
+            const modalOrientacion = document.getElementById("modalOrientacion");
+            if (modalOrientacion) modalOrientacion.innerText = item.orientation;
             
             const priceFormatted = item.price && item.price.trim() !== "" ? `${item.price} MXN` : (item.availability === "RESERVADO" ? "Unidad Reservada" : "Unidad Vendida");
-            document.getElementById("modalPrecio").innerText = priceFormatted;
+            const modalPrecio = document.getElementById("modalPrecio");
+            if (modalPrecio) modalPrecio.innerText = priceFormatted;
 
             const dispoBadge = document.getElementById("modalDispoBadge");
-            if (item.availability === "SI") {
-                dispoBadge.innerText = "Disponible";
-                dispoBadge.className = "bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
-            } else if (item.availability === "RESERVADO") {
-                dispoBadge.innerText = "Reservada";
-                dispoBadge.className = "bg-amber-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
-            } else {
-                dispoBadge.innerText = "Vendida / No Disponible";
-                dispoBadge.className = "bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
+            if (dispoBadge) {
+                if (item.availability === "SI") {
+                    dispoBadge.innerText = "Disponible";
+                    dispoBadge.className = "bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
+                } else if (item.availability === "RESERVADO") {
+                    dispoBadge.innerText = "Reservada";
+                    dispoBadge.className = "bg-amber-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
+                } else {
+                    dispoBadge.innerText = "Vendida / No Disponible";
+                    dispoBadge.className = "bg-rose-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest";
+                }
             }
 
             const layoutContainer = document.getElementById("modalLayoutRender");
-            layoutContainer.innerHTML = generateDynamicFloorPlanSVG(item);
+            if (layoutContainer) layoutContainer.innerHTML = generateDynamicFloorPlanSVG(item);
 
             const modal = document.getElementById("unitModal");
-            modal.classList.remove("hidden");
+            if (modal) modal.classList.remove("hidden");
             document.body.classList.add("overflow-hidden");
 
             lucide.createIcons();
@@ -897,7 +942,7 @@
 
         function closeModal() {
             const modal = document.getElementById("unitModal");
-            modal.classList.add("hidden");
+            if (modal) modal.classList.add("hidden");
             document.body.classList.remove("overflow-hidden");
         }
 
